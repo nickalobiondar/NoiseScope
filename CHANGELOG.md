@@ -15,3 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - stable transcript-lint schema (frozen field names, additive-only)
 - minimization pass: shrink a diverging trace to the smallest reproducing case
 - deterministic mutation engine with seeded RNG (same seed, same mutation set)
+- viewer ships prebuilt `dist/` for offline use
+
+### Verified
+- `cargo test` - 40 unit + 6 integration tests green
+- fixture smoke tests green for noise-xx, tls13, mls models
+
