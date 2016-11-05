@@ -27,3 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - replay transcript mode for re-checking previously diverging traces
 - JSON model export with stable field ordering
 
+## [0.5.0] - 2024-04-12
+
+### Added
+- MLS (RFC 9420) handshake model
+- reordering mutation (covers transcript-reorder attacks)
+
