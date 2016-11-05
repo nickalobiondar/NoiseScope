@@ -21,3 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `cargo test` - 40 unit + 6 integration tests green
 - fixture smoke tests green for noise-xx, tls13, mls models
 
+## [0.6.0] - 2025-06-19
+
+### Added
+- replay transcript mode for re-checking previously diverging traces
+- JSON model export with stable field ordering
+
