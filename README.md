@@ -1,0 +1,46 @@
+# noisescope
+
+<p align="center">
+  <img src="docs/assets/noise-constellation.svg" alt="noisescope handshake constellation" width="720"/>
+</p>
+
+<p align="center"><em>A control instrument for handshake state machines.<br/>
+It charts the constellation of states a transcript sweeps through, then flies deterministic mutations across that constellation until a trace diverges.</em></p>
+
+<p align="center">
+  <strong>Structural handshake transcript analyzer &amp; fuzzer</strong> ·
+  Rust (std-only) core · TypeScript viewer ·
+  <strong>NOT a cryptographic proof tool</strong>
+</p>
+
+---
+
+## The instrument, in one glance
+
+Point `noisescope` at two small JSON documents:
+
+- a **protocol spec** — a finite state machine of handshake states and the
+  transitions between them, and
+- a **transcript** — an ordered list of observed handshake events.
+
+It then does three things, each of them deterministic and dependency-free:
+
+1. **Replays** the transcript against the machine and lights up any structural
+   fault — a message out of order, the wrong role speaking, a replayed nonce, a
+   sequence counter that skipped.
+2. **Fuzzes** a conforming transcript by flying deterministic *mutations*
+   (drop / duplicate / reorder / corrupt-metadata) across it until conformance
+   breaks.
+3. **Minimizes** every failing mutation sequence down to the smallest set of
+   edits that still causes divergence — the counter-example, distilled.
+
+Everything is reproducible from `(seed, spec, transcript, budget)`. The core has
+**zero third-party dependencies**: it is the Rust standard library and nothing
+else, including a small hand-written JSON reader/writer, so the whole engine is
+auditable in an afternoon.
+
+> ### What this is *not*
+>
+> `noisescope` is **not** a cryptographic proof tool. It never evaluates
+> secrecy, authentication, forward secrecy, or any computational or symbolic
+> security property. Its "nonces" and "sequence numbers" are ordinary integers
