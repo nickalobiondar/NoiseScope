@@ -80,3 +80,21 @@ $ cargo build --release
 $ cargo test            # 34 unit + 6 integration tests
 
 # 1. Is my spec internally consistent?
+$ cargo run -- lint fixtures/noise-xx.protocol.json
+spec `noise-XX-abstract` is internally consistent
+
+# 2. Does a transcript conform?
+$ cargo run -- check fixtures/mls.protocol.json fixtures/mls.ok.transcript.json
+```
+
+That last command prints a real replay trace:
+
+```text
+protocol: mls-abstract
+final state: welcomed (accepting)
+conforming: yes
+path:
+  epoch_open --[proposer:Proposal]--> proposed
+  proposed --[committer:Commit#7777]--> committed
+  committed --[joiner:WelcomeAck]--> welcomed
+violations: none
