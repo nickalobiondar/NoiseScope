@@ -39,3 +39,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - minimization of failing mutations
 - per-state timing annotations in the constellation output
 
+## [0.3.0] - 2021-05-18
+
+### Added
+- TLS 1.3 handshake model
+- ASCII + SVG rendering in the TypeScript viewer
+
