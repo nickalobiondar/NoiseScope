@@ -44,3 +44,21 @@ auditable in an afternoon.
 > `noisescope` is **not** a cryptographic proof tool. It never evaluates
 > secrecy, authentication, forward secrecy, or any computational or symbolic
 > security property. Its "nonces" and "sequence numbers" are ordinary integers
+> used to check *shape*, not *soundness*. The bundled Noise/TLS/MLS-inspired
+> fixtures are **abstract teaching models with no wire compatibility**.
+> Conformance in noisescope implies **nothing** about the real protocols.
+
+---
+
+## Why a "constellation"?
+
+A handshake is a path through a small sky of states. Draw the states as stars
+and the legal transitions as the lines between them, and a transcript becomes a
+single lit path across that constellation. Most analysis tools give you a log;
+noisescope gives you the *chart* — and then it perturbs the chart to see which
+small nudges send the path off course.
+
+The second instrument panel is the **divergence scope**:
+
+<p align="center">
+  <img src="docs/assets/handshake-divergence.svg" alt="noisescope divergence instrument" width="720"/>
