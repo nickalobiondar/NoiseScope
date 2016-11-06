@@ -62,3 +62,21 @@ The second instrument panel is the **divergence scope**:
 
 <p align="center">
   <img src="docs/assets/handshake-divergence.svg" alt="noisescope divergence instrument" width="720"/>
+</p>
+
+The green trace is a baseline that conforms. The amber trace is the same
+transcript after a *minimized* mutation. Where they part company, the red marker
+pulses — that split point is exactly what the minimizer hands you.
+
+Both SVGs above are local, self-contained, and animated (SMIL). No external
+assets, no runtime, no network.
+
+---
+
+## Quick start
+
+```console
+$ cargo build --release
+$ cargo test            # 34 unit + 6 integration tests
+
+# 1. Is my spec internally consistent?
