@@ -116,3 +116,21 @@ final state: hello_done (NOT accepting)
 conforming: no
 path:
   start --[client:ClientHello#500]--> hello_done
+violations (3):
+  [unexpected_message] @event 0 state=start: got server:ServerFlight in state `start`; expected one of [client:ClientHello]
+  [unexpected_message] @event 2 state=hello_done: got client:ClientFinished in state `hello_done`; expected one of [server:ServerFlight]
+  [not_accepting] @event 3 state=hello_done: final state `hello_done` is not accepting (accepting: [established])
+```
+
+Notice the engine is **fail-soft**: the out-of-order `ServerFlight` is reported
+but does not derail evaluation of the rest of the transcript, so you see *every*
+fault in one pass, not just the first. The exit code is `1`, so this is directly
+usable as a CI gate.
+
+---
+
+## Flying mutations: the fuzzer
+
+Start from a transcript that *does* conform and let noisescope hunt for the
+smallest edits that break it:
+
