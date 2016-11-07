@@ -152,3 +152,21 @@ minimized plan (1 of 1 mutations, 2 evals):
   - drop event #2
 divergence:
   protocol: noise-XX-abstract
+  final state: await_se (NOT accepting)
+  conforming: no
+  path:
+    await_e --[initiator:e#1001]--> await_ee
+    await_ee --[responder:e_ee_s_es#2002]--> await_se
+  violations (1):
+    [not_accepting] @event 2 state=await_se: final state `await_se` is not accepting (accepting: [established])
+```
+
+The finding is exact: dropping the third message strands the machine in
+`await_se`, one step short of `established`. The minimizer confirms this is
+**1-minimal** — remove that single mutation and the transcript conforms again.
+
+Because the plan generator is a seeded SplitMix64 PRNG, re-running with the same
+flags reproduces byte-for-byte identical JSON. That determinism is asserted by
+the test suite (`fuzzing_is_deterministic_and_minimal`).
+
+### JSON for machines
