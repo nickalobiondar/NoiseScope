@@ -98,3 +98,21 @@ path:
   proposed --[committer:Commit#7777]--> committed
   committed --[joiner:WelcomeAck]--> welcomed
 violations: none
+```
+
+---
+
+## Reading a divergence
+
+Feed it a transcript where the server flight arrives *before* the client hello:
+
+```console
+$ cargo run -- check fixtures/tls13.protocol.json fixtures/tls13.reorder.transcript.json
+```
+
+```text
+protocol: tls13-abstract
+final state: hello_done (NOT accepting)
+conforming: no
+path:
+  start --[client:ClientHello#500]--> hello_done
