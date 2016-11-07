@@ -134,3 +134,21 @@ usable as a CI gate.
 Start from a transcript that *does* conform and let noisescope hunt for the
 smallest edits that break it:
 
+```console
+$ cargo run -- fuzz fixtures/noise-xx.protocol.json fixtures/noise-xx.ok.transcript.json \
+      --seed 0x5EED --trials 200 --max-findings 1
+```
+
+```text
+noisescope — divergence report
+(structural analysis only; not a cryptographic proof)
+protocol: noise-XX-abstract
+baseline conforming: yes
+trials: 200
+findings: 1
+
+--- finding #0 (seed 0x5eed) ---
+minimized plan (1 of 1 mutations, 2 evals):
+  - drop event #2
+divergence:
+  protocol: noise-XX-abstract
