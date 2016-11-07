@@ -170,3 +170,21 @@ flags reproduces byte-for-byte identical JSON. That determinism is asserted by
 the test suite (`fuzzing_is_deterministic_and_minimal`).
 
 ### JSON for machines
+
+```console
+$ cargo run -- fuzz fixtures/noise-xx.protocol.json fixtures/noise-xx.ok.transcript.json \
+      --seed 0x5EED --trials 200 --max-findings 2 --format json
+```
+
+```json
+{
+  "tool": "noisescope",
+  "disclaimer": "structural handshake analysis only; not a cryptographic proof",
+  "protocol": "noise-XX-abstract",
+  "baseline_conforming": true,
+  "baseline": {
+    "final_state": "established",
+    "reached_accepting": true,
+    "conforming": true,
+    "consumed": 3,
+    "violations": [],
