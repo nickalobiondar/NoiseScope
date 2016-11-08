@@ -188,3 +188,21 @@ $ cargo run -- fuzz fixtures/noise-xx.protocol.json fixtures/noise-xx.ok.transcr
     "conforming": true,
     "consumed": 3,
     "violations": [],
+    "path": [
+      { "event_index": 0, "event": "initiator:e#1001", "from": "await_e", "to": "await_ee" }
+    ]
+  },
+  "trials": 200,
+  "findings_count": 2,
+  "findings": [ /* each with original_plan, minimized_plan, minimizer_evaluations, divergence */ ]
+}
+```
+
+Every report carries the `disclaimer` field in-band, so downstream tooling can
+never mistake a structural report for a security verdict.
+
+---
+
+## The viewer: charting a path
+
+`noisescope paths ...` emits a viewer-friendly JSON document; the bundled
