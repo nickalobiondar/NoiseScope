@@ -206,3 +206,21 @@ never mistake a structural report for a security verdict.
 ## The viewer: charting a path
 
 `noisescope paths ...` emits a viewer-friendly JSON document; the bundled
+TypeScript viewer turns it into an ASCII chart or a standalone animated SVG.
+
+```console
+$ cargo run -- paths fixtures/noise-xx.protocol.json fixtures/noise-xx.ok.transcript.json \
+      | node viewer/dist/cli.js
+noise-XX-abstract  [final: established ✓]
+(await_e)
+  └─ initiator:e#1001 ─▶ (await_ee)
+  └─ responder:e_ee_s_es#2002 ─▶ (await_se)
+  └─ initiator:s_se ─▶ ((established))
+```
+
+Double parentheses mark an accepting state. For a shareable diagram:
+
+```console
+$ cargo run -- paths fixtures/tls13.protocol.json fixtures/tls13.ok.transcript.json \
+      | node viewer/dist/cli.js --svg > handshake.svg
+```
