@@ -224,3 +224,21 @@ Double parentheses mark an accepting state. For a shareable diagram:
 $ cargo run -- paths fixtures/tls13.protocol.json fixtures/tls13.ok.transcript.json \
       | node viewer/dist/cli.js --svg > handshake.svg
 ```
+
+The viewer is pure TypeScript, uses only Node's built-ins (`node:fs`,
+`node:test`), and validates its input with a real type guard so malformed JSON
+fails loudly rather than rendering garbage.
+
+Build and test the viewer:
+
+```console
+$ cd viewer && npm install && npm run build && npm test
+```
+
+---
+
+## The four invariants
+
+For each event, the engine finds the transitions matching
+`(current_state, role, msg)` and enforces:
+
