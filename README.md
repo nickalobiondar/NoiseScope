@@ -242,3 +242,21 @@ $ cd viewer && npm install && npm run build && npm test
 For each event, the engine finds the transitions matching
 `(current_state, role, msg)` and enforces:
 
+| Invariant             | Fault kind            | Triggered when …                                            |
+|-----------------------|-----------------------|-------------------------------------------------------------|
+| **Order**             | `unexpected_message`  | no transition exists for that message from the current state |
+| **Role**              | `role_mismatch`       | the message is valid here but for a *different* role         |
+| **Nonce freshness**   | `nonce_replay`        | a required-fresh nonce is missing or already seen            |
+| **Sequence**          | `sequence_violation`  | a required `seq` is missing or ≠ previous-for-role + 1        |
+| **Termination**       | `not_accepting`       | the run ends outside the `accepting` set                     |
+
+`seq` is a **per-role** counter that starts at `0` for each role's first
+sequenced message. Full semantics live in [`docs/PROTOCOL.md`](docs/PROTOCOL.md).
+
+---
+
+## The mutation kit
+
+| Mutation       | Real-world analogue                | Effect                                   |
+|----------------|------------------------------------|------------------------------------------|
+| `drop`         | message lost in flight             | removes one event                        |
