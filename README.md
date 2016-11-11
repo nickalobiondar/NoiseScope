@@ -278,3 +278,21 @@ the report tells you how many predicate evaluations it took to get there.
 ---
 
 ## Command reference
+
+```text
+noisescope <command> [args] [flags]
+
+  lint    <spec.json>                     check a spec for internal consistency
+  check   <spec.json> <transcript.json>   replay a transcript, report divergence
+  fuzz    <spec.json> <transcript.json>   mutate & minimize failing sequences
+  paths   <spec.json> <transcript.json>   emit handshake path JSON (for the viewer)
+  version                                 print version
+  help                                    show help
+
+Flags:
+  --format json|text    output format (default: text; `paths` is always JSON)
+  --seed <u64>          fuzz PRNG seed (default: 0x5EED; accepts 0x-hex)
+  --trials <n>          fuzz trial budget (default: 256)
+  --max-plan-len <n>    max mutations per plan (default: 4)
+  --max-findings <n>    stop after n findings (default: 8; 0 = unlimited)
+  --out <path>          write output to a file instead of stdout
