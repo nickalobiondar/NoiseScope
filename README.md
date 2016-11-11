@@ -260,3 +260,21 @@ sequenced message. Full semantics live in [`docs/PROTOCOL.md`](docs/PROTOCOL.md)
 | Mutation       | Real-world analogue                | Effect                                   |
 |----------------|------------------------------------|------------------------------------------|
 | `drop`         | message lost in flight             | removes one event                        |
+| `duplicate`    | replay / double delivery           | inserts a copy right after an event      |
+| `reorder`      | out-of-order network delivery      | swaps two events                         |
+| `corrupt_meta` | tampered / stale metadata          | flips a `nonce`, `seq`, or `role` field  |
+
+Mutation plans are scheduled by a seeded SplitMix64 PRNG. Out-of-range indices
+(possible after a `drop` shrinks the list) degrade to no-ops, which keeps
+mutation application total and the minimizer panic-free.
+
+### Minimization
+
+Failing plans are reduced with the classic greedy delta-debugging pass: try
+removing each mutation, keep the removal whenever the transcript still diverges,
+and iterate to a fixed point. The result is a **1-minimal** counter-example, and
+the report tells you how many predicate evaluations it took to get there.
+
+---
+
+## Command reference
