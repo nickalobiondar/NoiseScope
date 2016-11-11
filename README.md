@@ -296,3 +296,21 @@ Flags:
   --max-plan-len <n>    max mutations per plan (default: 4)
   --max-findings <n>    stop after n findings (default: 8; 0 = unlimited)
   --out <path>          write output to a file instead of stdout
+
+Exit codes:  0 conforming/clean · 1 divergence/violations · 2 usage/I/O error
+```
+
+---
+
+## Bundled fixtures
+
+Three abstract, **wire-incompatible** teaching models live in `fixtures/`:
+
+- **`noise-xx`** — loosely inspired by the Noise `XX` pattern
+  (`-> e`, `<- e ee s es`, `-> s se`), collapsed into abstract message tokens.
+- **`tls13`** — loosely inspired by the TLS 1.3 flight structure, with the whole
+  server flight collapsed into one abstract `ServerFlight` message.
+- **`mls`** — loosely inspired by the MLS `Proposal → Commit → Welcome` group
+  handshake, with epoch progression modeled as per-role sequence numbers.
+
+Each ships with a conforming transcript plus at least one diverging transcript
