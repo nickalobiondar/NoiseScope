@@ -314,3 +314,21 @@ Three abstract, **wire-incompatible** teaching models live in `fixtures/`:
   handshake, with epoch progression modeled as per-role sequence numbers.
 
 Each ships with a conforming transcript plus at least one diverging transcript
+(a nonce replay, an out-of-order flight). They exist to make the *tool*
+legible — not to represent the real protocols.
+
+---
+
+## Project layout
+
+```text
+noisescope/
+├── src/
+│   ├── main.rs         CLI (lint / check / fuzz / paths)
+│   ├── lib.rs          crate root + module map
+│   ├── json.rs         std-only JSON parse/serialize
+│   ├── model.rs        ProtocolSpec, Transcript, Event
+│   ├── parser.rs       JSON → model
+│   ├── engine.rs       replay + the four invariants
+│   ├── mutate.rs       SplitMix64 PRNG + mutations
+│   ├── minimize.rs     delta-debugging minimizer
