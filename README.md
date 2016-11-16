@@ -332,3 +332,21 @@ noisescope/
 │   ├── engine.rs       replay + the four invariants
 │   ├── mutate.rs       SplitMix64 PRNG + mutations
 │   ├── minimize.rs     delta-debugging minimizer
+│   └── divergence.rs   fuzz orchestration + JSON/text reports
+├── tests/integration.rs
+├── fixtures/           noise / tls / mls specs + transcripts
+├── viewer/             TypeScript path viewer (ASCII + SVG)
+├── docs/
+│   ├── PROTOCOL.md     the full schema & semantics
+│   └── assets/         two animated local SVGs
+├── Makefile  ·  Cargo.toml  ·  LICENSE  ·  CHANGELOG.md
+└── .github/workflows/ci.yml
+```
+
+---
+
+## Building everything
+
+```console
+$ make check     # fmt-check + clippy (if available) + rust tests + viewer tests
+$ make build     # release binary + compiled viewer
