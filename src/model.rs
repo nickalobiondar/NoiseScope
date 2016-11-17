@@ -20,3 +20,15 @@ use std::collections::BTreeMap;
 pub type Role = String;
 
 /// A message type label, e.g. `"e"`, `"s"`, `"ClientHello"`, `"Commit"`.
+pub type MsgType = String;
+
+/// A named protocol state.
+pub type StateName = String;
+
+/// A single transition rule in the protocol state machine.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Transition {
+    /// State the machine must be in for this transition to apply.
+    pub from: StateName,
+    /// State entered after the transition fires.
+    pub to: StateName,
