@@ -350,3 +350,21 @@ noisescope/
 ```console
 $ make check     # fmt-check + clippy (if available) + rust tests + viewer tests
 $ make build     # release binary + compiled viewer
+$ make demo      # runs the check/fuzz/paths demos shown above
+```
+
+The `Makefile` degrades gracefully: optional tools (`rustfmt`, `clippy`) are
+skipped with a note if they are not installed, so `make check` works on a bare
+toolchain.
+
+---
+
+## Design notes: why it looks the way it does
+
+**Standard library only, on purpose.** The core crate lists *no* dependencies.
+That includes JSON: `src/json.rs` is a small, hand-audited reader/writer with
+ordered object keys so report output is stable and diff-friendly. The payoff is
+supply-chain simplicity — you can read the entire trust surface — and
+reproducible builds that will still compile years from now. The cost is that we
+re-implement a few conveniences; the tests in `json.rs` cover escapes, surrogate
+pairs, integer formatting, and trailing-garbage rejection to keep that honest.
