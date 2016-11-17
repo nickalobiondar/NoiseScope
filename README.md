@@ -386,3 +386,21 @@ what you want when triaging a broken transcript rather than fixing one fault at
 a time only to discover the next.
 
 **Total mutation application.** Minimization repeatedly removes mutations and
+re-applies the remainder. Because a `drop` shrinks the event list, later indices
+in a plan can fall out of range mid-reduction. Rather than special-casing this,
+`apply_one` treats out-of-range edits as no-ops. Mutation application is thus a
+*total* function over any plan and any transcript, so the minimizer can never
+panic and always terminates at a fixed point.
+
+**Small, sharp data model.** States, roles, and message types are just strings,
+so a spec can speak whatever vocabulary a protocol uses. The engine's power
+comes from composition — order + role + freshness + sequencing — not from a
+sprawling type hierarchy. The whole model fits in `model.rs` in a single sitting.
+
+## Using noisescope in CI
+
+The exit codes make it a drop-in gate. A conforming transcript exits `0`; any
+divergence exits `1`; a usage or I/O problem exits `2`. For example, to fail a
+pipeline when a captured handshake stops matching its spec:
+
+```console
