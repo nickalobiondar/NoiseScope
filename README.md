@@ -368,3 +368,21 @@ supply-chain simplicity — you can read the entire trust surface — and
 reproducible builds that will still compile years from now. The cost is that we
 re-implement a few conveniences; the tests in `json.rs` cover escapes, surrogate
 pairs, integer formatting, and trailing-garbage rejection to keep that honest.
+
+**Determinism as a feature, not an accident.** A fuzzing tool is only useful if
+its findings can be reproduced and shared. noisescope threads a single
+SplitMix64 seed through the whole run: the top-level `--seed`, an XOR-mixed
+per-trial seed, and a per-plan generator are all derived from it by pure
+functions. The integration test `fuzzing_is_deterministic_and_minimal` asserts
+that two runs with identical configuration serialize to byte-identical JSON.
+This is why findings quote their seed (`finding #0 (seed 0x5eed)`): paste the
+seed back and you get the same counter-example.
+
+**Fail-soft replay.** Many checkers stop at the first fault. noisescope keeps
+walking after ordering faults (skipping the offending event without advancing
+state) and layers nonce/sequence checks on top of otherwise-valid steps. One
+`check` run therefore surfaces the *whole* set of structural problems, which is
+what you want when triaging a broken transcript rather than fixing one fault at
+a time only to discover the next.
+
+**Total mutation application.** Minimization repeatedly removes mutations and
