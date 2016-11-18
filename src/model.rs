@@ -32,3 +32,16 @@ pub struct Transition {
     pub from: StateName,
     /// State entered after the transition fires.
     pub to: StateName,
+    /// Role expected to have sent the message.
+    pub role: Role,
+    /// Message type that triggers the transition.
+    pub msg: MsgType,
+    /// If true, the message must carry a nonce that has not been seen before.
+    pub requires_fresh_nonce: bool,
+    /// If true, the message must carry a sequence number equal to the previous
+    /// sequence for this role plus one (per-role monotonic counter).
+    pub requires_seq: bool,
+    /// Optional human note surfaced in reports.
+    pub note: Option<String>,
+}
+
