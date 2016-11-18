@@ -57,3 +57,16 @@ pub struct ProtocolSpec {
     /// Free-form description surfaced in reports/docs.
     pub description: Option<String>,
 }
+
+impl ProtocolSpec {
+    /// Find transitions that apply for a given `(from, role, msg)` key.
+    pub fn matching(&self, from: &str, role: &str, msg: &str) -> Vec<&Transition> {
+        self.transitions
+            .iter()
+            .filter(|t| t.from == from && t.role == role && t.msg == msg)
+            .collect()
+    }
+
+    pub fn is_accepting(&self, state: &str) -> bool {
+        self.accepting.iter().any(|s| s == state)
+    }
