@@ -107,3 +107,15 @@ impl ProtocolSpec {
                     t.role
                 ));
             }
+        }
+        problems
+    }
+}
+
+/// A single observed handshake event.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Event {
+    /// Stable identifier used in reports and minimization.
+    pub id: String,
+    pub role: Role,
+    pub msg: MsgType,
