@@ -94,3 +94,16 @@ impl ProtocolSpec {
                     "transition #{i} references unknown `from` state `{}`",
                     t.from
                 ));
+            }
+            if !self.has_state(&t.to) {
+                problems.push(format!(
+                    "transition #{i} references unknown `to` state `{}`",
+                    t.to
+                ));
+            }
+            if !self.roles.iter().any(|r| r == &t.role) {
+                problems.push(format!(
+                    "transition #{i} references undeclared role `{}`",
+                    t.role
+                ));
+            }
