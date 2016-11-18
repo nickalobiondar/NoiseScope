@@ -82,3 +82,15 @@ impl ProtocolSpec {
         let mut problems = Vec::new();
         if !self.has_state(&self.initial) {
             problems.push(format!("initial state `{}` is not declared", self.initial));
+        }
+        for acc in &self.accepting {
+            if !self.has_state(acc) {
+                problems.push(format!("accepting state `{}` is not declared", acc));
+            }
+        }
+        for (i, t) in self.transitions.iter().enumerate() {
+            if !self.has_state(&t.from) {
+                problems.push(format!(
+                    "transition #{i} references unknown `from` state `{}`",
+                    t.from
+                ));
