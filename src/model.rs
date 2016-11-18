@@ -119,3 +119,15 @@ pub struct Event {
     pub id: String,
     pub role: Role,
     pub msg: MsgType,
+    pub nonce: Option<u64>,
+    pub seq: Option<u64>,
+    /// Arbitrary string key/value metadata (e.g. `cipher=chachapoly`).
+    pub meta: BTreeMap<String, String>,
+}
+
+impl Event {
+    pub fn new(id: impl Into<String>, role: impl Into<String>, msg: impl Into<String>) -> Self {
+        Event {
+            id: id.into(),
+            role: role.into(),
+            msg: msg.into(),
