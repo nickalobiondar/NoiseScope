@@ -45,3 +45,15 @@ pub struct Transition {
     pub note: Option<String>,
 }
 
+/// The declarative protocol specification (a state machine).
+#[derive(Debug, Clone, PartialEq)]
+pub struct ProtocolSpec {
+    pub name: String,
+    pub roles: Vec<Role>,
+    pub initial: StateName,
+    pub accepting: Vec<StateName>,
+    pub states: Vec<StateName>,
+    pub transitions: Vec<Transition>,
+    /// Free-form description surfaced in reports/docs.
+    pub description: Option<String>,
+}
