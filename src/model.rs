@@ -70,3 +70,15 @@ impl ProtocolSpec {
     pub fn is_accepting(&self, state: &str) -> bool {
         self.accepting.iter().any(|s| s == state)
     }
+
+    pub fn has_state(&self, state: &str) -> bool {
+        self.states.iter().any(|s| s == state)
+    }
+
+    /// Structural sanity checks on the spec itself (not on any transcript).
+    /// Returns a list of human-readable problems; empty means the spec is
+    /// internally consistent.
+    pub fn lint(&self) -> Vec<String> {
+        let mut problems = Vec::new();
+        if !self.has_state(&self.initial) {
+            problems.push(format!("initial state `{}` is not declared", self.initial));
