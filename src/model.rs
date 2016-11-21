@@ -168,3 +168,16 @@ mod tests {
     use super::*;
 
     fn tiny_spec() -> ProtocolSpec {
+        ProtocolSpec {
+            name: "tiny".into(),
+            roles: vec!["a".into(), "b".into()],
+            initial: "s0".into(),
+            accepting: vec!["s2".into()],
+            states: vec!["s0".into(), "s1".into(), "s2".into()],
+            transitions: vec![
+                Transition {
+                    from: "s0".into(),
+                    to: "s1".into(),
+                    role: "a".into(),
+                    msg: "hello".into(),
+                    requires_fresh_nonce: true,
