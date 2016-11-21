@@ -1,0 +1,24 @@
+//! Parsers that build the [`model`] types from JSON fixtures.
+//!
+//! Two document kinds are supported:
+//!  * a **protocol spec** (`kind: "protocol"`)
+//!  * a **transcript** (`kind: "transcript"`)
+//!
+//! The `kind` field is optional; documents are recognized structurally when it
+//! is absent (a `transitions` array means protocol, an `events` array means
+//! transcript). See `docs/PROTOCOL.md` for the full schema.
+
+use crate::json::{self, Json};
+use crate::model::{Event, ProtocolSpec, Transcript, Transition};
+use std::collections::BTreeMap;
+
+/// Error produced while turning JSON into model types.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ParseError(pub String);
+
+impl std::fmt::Display for ParseError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "parse error: {}", self.0)
+    }
+}
+
