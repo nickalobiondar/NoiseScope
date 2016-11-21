@@ -156,3 +156,15 @@ pub struct Transcript {
 
 impl Transcript {
     pub fn new(protocol: impl Into<String>) -> Self {
+        Transcript {
+            protocol: protocol.into(),
+            events: Vec::new(),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn tiny_spec() -> ProtocolSpec {
