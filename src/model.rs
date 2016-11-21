@@ -131,3 +131,16 @@ impl Event {
             id: id.into(),
             role: role.into(),
             msg: msg.into(),
+            nonce: None,
+            seq: None,
+            meta: BTreeMap::new(),
+        }
+    }
+
+    /// A concise label used in path rendering, e.g. `initiator:e#3`.
+    pub fn label(&self) -> String {
+        let mut s = format!("{}:{}", self.role, self.msg);
+        if let Some(n) = self.nonce {
+            s.push_str(&format!("#{n}"));
+        }
+        s
