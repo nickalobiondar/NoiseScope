@@ -144,3 +144,15 @@ impl Event {
             s.push_str(&format!("#{n}"));
         }
         s
+    }
+}
+
+/// A transcript: an ordered sequence of events, plus the spec name it targets.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Transcript {
+    pub protocol: String,
+    pub events: Vec<Event>,
+}
+
+impl Transcript {
+    pub fn new(protocol: impl Into<String>) -> Self {
