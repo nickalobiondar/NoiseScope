@@ -48,3 +48,16 @@ fn str_array(obj: &Json, key: &str) -> Result<Vec<String>, ParseError> {
         .ok_or_else(|| ParseError(format!("field `{key}` must be an array")))?;
     let mut out = Vec::with_capacity(arr.len());
     for (i, item) in arr.iter().enumerate() {
+        match item.as_str() {
+            Some(s) => out.push(s.to_string()),
+            None => {
+                return Err(ParseError(format!(
+                    "element {i} of `{key}` must be a string"
+                )))
+            }
+        }
+    }
+    Ok(out)
+}
+
+/// Parse a protocol specification document.
