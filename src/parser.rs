@@ -22,3 +22,16 @@ impl std::fmt::Display for ParseError {
     }
 }
 
+impl std::error::Error for ParseError {}
+
+impl From<json::JsonError> for ParseError {
+    fn from(e: json::JsonError) -> Self {
+        ParseError(e.to_string())
+    }
+}
+
+fn require_str(obj: &Json, key: &str) -> Result<String, ParseError> {
+    obj.get(key)
+        .and_then(Json::as_str)
+        .map(|s| s.to_string())
+        .ok_or_else(|| ParseError(format!("missing required string field `{key}`")))
