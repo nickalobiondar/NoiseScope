@@ -35,3 +35,16 @@ fn require_str(obj: &Json, key: &str) -> Result<String, ParseError> {
         .and_then(Json::as_str)
         .map(|s| s.to_string())
         .ok_or_else(|| ParseError(format!("missing required string field `{key}`")))
+}
+
+fn opt_str(obj: &Json, key: &str) -> Option<String> {
+    obj.get(key).and_then(Json::as_str).map(|s| s.to_string())
+}
+
+fn str_array(obj: &Json, key: &str) -> Result<Vec<String>, ParseError> {
+    let arr = obj
+        .get(key)
+        .and_then(Json::as_array)
+        .ok_or_else(|| ParseError(format!("field `{key}` must be an array")))?;
+    let mut out = Vec::with_capacity(arr.len());
+    for (i, item) in arr.iter().enumerate() {
