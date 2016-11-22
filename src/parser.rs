@@ -61,3 +61,16 @@ fn str_array(obj: &Json, key: &str) -> Result<Vec<String>, ParseError> {
 }
 
 /// Parse a protocol specification document.
+pub fn parse_protocol(input: &str) -> Result<ProtocolSpec, ParseError> {
+    let doc = json::parse(input)?;
+    parse_protocol_value(&doc)
+}
+
+fn parse_protocol_value(doc: &Json) -> Result<ProtocolSpec, ParseError> {
+    let name = require_str(doc, "name")?;
+    let roles = str_array(doc, "roles")?;
+    let initial = require_str(doc, "initial")?;
+    let states = str_array(doc, "states")?;
+    let accepting = str_array(doc, "accepting")?;
+    let description = opt_str(doc, "description");
+
