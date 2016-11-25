@@ -74,3 +74,16 @@ fn parse_protocol_value(doc: &Json) -> Result<ProtocolSpec, ParseError> {
     let accepting = str_array(doc, "accepting")?;
     let description = opt_str(doc, "description");
 
+    let trans_arr = doc
+        .get("transitions")
+        .and_then(Json::as_array)
+        .ok_or_else(|| ParseError("field `transitions` must be an array".into()))?;
+
+    let mut transitions = Vec::with_capacity(trans_arr.len());
+    for (i, t) in trans_arr.iter().enumerate() {
+        let ctx = |k: &str| ParseError(format!("transition #{i}: missing field `{k}`"));
+        let from = t
+            .get("from")
+            .and_then(Json::as_str)
+            .ok_or_else(|| ctx("from"))?;
+        let to = t
