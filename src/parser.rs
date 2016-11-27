@@ -87,3 +87,17 @@ fn parse_protocol_value(doc: &Json) -> Result<ProtocolSpec, ParseError> {
             .and_then(Json::as_str)
             .ok_or_else(|| ctx("from"))?;
         let to = t
+            .get("to")
+            .and_then(Json::as_str)
+            .ok_or_else(|| ctx("to"))?;
+        let role = t
+            .get("role")
+            .and_then(Json::as_str)
+            .ok_or_else(|| ctx("role"))?;
+        let msg = t
+            .get("msg")
+            .and_then(Json::as_str)
+            .ok_or_else(|| ctx("msg"))?;
+        let requires_fresh_nonce = t
+            .get("requires_fresh_nonce")
+            .and_then(Json::as_bool)
