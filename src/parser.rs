@@ -101,3 +101,16 @@ fn parse_protocol_value(doc: &Json) -> Result<ProtocolSpec, ParseError> {
         let requires_fresh_nonce = t
             .get("requires_fresh_nonce")
             .and_then(Json::as_bool)
+            .unwrap_or(false);
+        let requires_seq = t
+            .get("requires_seq")
+            .and_then(Json::as_bool)
+            .unwrap_or(false);
+        let note = opt_str(t, "note");
+        transitions.push(Transition {
+            from: from.to_string(),
+            to: to.to_string(),
+            role: role.to_string(),
+            msg: msg.to_string(),
+            requires_fresh_nonce,
+            requires_seq,
