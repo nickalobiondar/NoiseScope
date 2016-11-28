@@ -153,3 +153,17 @@ fn parse_transcript_value(doc: &Json) -> Result<Transcript, ParseError> {
             .and_then(Json::as_str)
             .ok_or_else(|| ParseError(format!("event #{i}: missing `msg`")))?;
         let id = opt_str(e, "id").unwrap_or_else(|| format!("e{i}"));
+        let nonce = e.get("nonce").and_then(Json::as_u64);
+        let seq = e.get("seq").and_then(Json::as_u64);
+        let mut meta = BTreeMap::new();
+        if let Some(Json::Obj(entries)) = e.get("meta") {
+            for (k, v) in entries {
+                let val = match v {
+                    Json::Str(s) => s.clone(),
+                    Json::Num(n) => {
+                        if n.fract() == 0.0 {
+                            format!("{}", *n as i64)
+                        } else {
+                            format!("{n}")
+                        }
+                    }
