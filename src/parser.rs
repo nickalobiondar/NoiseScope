@@ -140,3 +140,16 @@ fn parse_transcript_value(doc: &Json) -> Result<Transcript, ParseError> {
     let events_arr = doc
         .get("events")
         .and_then(Json::as_array)
+        .ok_or_else(|| ParseError("field `events` must be an array".into()))?;
+
+    let mut events = Vec::with_capacity(events_arr.len());
+    for (i, e) in events_arr.iter().enumerate() {
+        let role = e
+            .get("role")
+            .and_then(Json::as_str)
+            .ok_or_else(|| ParseError(format!("event #{i}: missing `role`")))?;
+        let msg = e
+            .get("msg")
+            .and_then(Json::as_str)
+            .ok_or_else(|| ParseError(format!("event #{i}: missing `msg`")))?;
+        let id = opt_str(e, "id").unwrap_or_else(|| format!("e{i}"));
