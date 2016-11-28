@@ -127,3 +127,16 @@ fn parse_protocol_value(doc: &Json) -> Result<ProtocolSpec, ParseError> {
         transitions,
         description,
     })
+}
+
+/// Parse a transcript document.
+pub fn parse_transcript(input: &str) -> Result<Transcript, ParseError> {
+    let doc = json::parse(input)?;
+    parse_transcript_value(&doc)
+}
+
+fn parse_transcript_value(doc: &Json) -> Result<Transcript, ParseError> {
+    let protocol = require_str(doc, "protocol")?;
+    let events_arr = doc
+        .get("events")
+        .and_then(Json::as_array)
