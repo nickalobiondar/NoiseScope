@@ -114,3 +114,16 @@ fn parse_protocol_value(doc: &Json) -> Result<ProtocolSpec, ParseError> {
             msg: msg.to_string(),
             requires_fresh_nonce,
             requires_seq,
+            note,
+        });
+    }
+
+    Ok(ProtocolSpec {
+        name,
+        roles,
+        initial,
+        accepting,
+        states,
+        transitions,
+        description,
+    })
