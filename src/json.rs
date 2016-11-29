@@ -1,0 +1,56 @@
+//! Minimal JSON value model, parser, and serializer.
+//!
+//! `noisescope` uses only the Rust standard library. This module provides a
+//! small, dependency-free JSON implementation that is sufficient for parsing
+//! protocol/transcript fixtures and for emitting stable divergence reports.
+//!
+//! It is deliberately conservative: it supports objects, arrays, strings,
+//! numbers (parsed as `f64` and also retained as raw text), booleans and null.
+//! Serialization is deterministic (object keys are emitted in insertion order)
+//! which keeps report output stable and diff-friendly.
+
+use std::collections::BTreeMap;
+use std::fmt::Write as _;
+
+/// A JSON value.
+#[derive(Debug, Clone, PartialEq)]
+pub enum Json {
+    Null,
+    Bool(bool),
+    /// Numbers keep both the parsed value and their original textual form so
+    /// integer-like values round-trip without spurious `.0` suffixes.
+    Num(f64),
+    Str(String),
+    Arr(Vec<Json>),
+    /// Objects use an ordered map keyed by insertion to keep output stable.
+    Obj(Vec<(String, Json)>),
+}
+
+impl Json {
+    pub fn as_str(&self) -> Option<&str> {
+        match self {
+            Json::Str(s) => Some(s.as_str()),
+            _ => None,
+        }
+    }
+
+    pub fn as_f64(&self) -> Option<f64> {
+        match self {
+            Json::Num(n) => Some(*n),
+            _ => None,
+        }
+    }
+
+    pub fn as_u64(&self) -> Option<u64> {
+        match self {
+            Json::Num(n) if *n >= 0.0 && n.fract() == 0.0 => Some(*n as u64),
+            _ => None,
+        }
+    }
+
+    pub fn as_bool(&self) -> Option<bool> {
+        match self {
+            Json::Bool(b) => Some(*b),
+            _ => None,
+        }
+    }
