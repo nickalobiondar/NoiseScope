@@ -193,3 +193,16 @@ mod tests {
     #[test]
     fn parse_protocol_basic() {
         let src = r#"{
+            "name": "demo",
+            "roles": ["i", "r"],
+            "initial": "start",
+            "states": ["start", "done"],
+            "accepting": ["done"],
+            "transitions": [
+                {"from": "start", "to": "done", "role": "i", "msg": "e",
+                 "requires_fresh_nonce": true}
+            ]
+        }"#;
+        let spec = parse_protocol(src).unwrap();
+        assert_eq!(spec.name, "demo");
+        assert_eq!(spec.transitions.len(), 1);
