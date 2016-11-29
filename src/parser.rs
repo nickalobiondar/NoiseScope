@@ -180,3 +180,16 @@ fn parse_transcript_value(doc: &Json) -> Result<Transcript, ParseError> {
             nonce,
             seq,
             meta,
+        });
+    }
+
+    Ok(Transcript { protocol, events })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parse_protocol_basic() {
+        let src = r#"{
