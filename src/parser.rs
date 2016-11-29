@@ -167,3 +167,16 @@ fn parse_transcript_value(doc: &Json) -> Result<Transcript, ParseError> {
                             format!("{n}")
                         }
                     }
+                    Json::Bool(b) => b.to_string(),
+                    other => other.to_compact(),
+                };
+                meta.insert(k.clone(), val);
+            }
+        }
+        events.push(Event {
+            id,
+            role: role.to_string(),
+            msg: msg.to_string(),
+            nonce,
+            seq,
+            meta,
