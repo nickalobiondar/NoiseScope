@@ -121,3 +121,25 @@ impl Json {
                 out.push_str("[\n");
                 for (i, item) in items.iter().enumerate() {
                     push_indent(out, indent + 1);
+                    item.write_pretty(out, indent + 1);
+                    if i + 1 < items.len() {
+                        out.push(',');
+                    }
+                    out.push('\n');
+                }
+                push_indent(out, indent);
+                out.push(']');
+            }
+            Json::Obj(entries) if !entries.is_empty() => {
+                out.push_str("{\n");
+                for (i, (k, v)) in entries.iter().enumerate() {
+                    push_indent(out, indent + 1);
+                    write_string(out, k);
+                    out.push_str(": ");
+                    v.write_pretty(out, indent + 1);
+                    if i + 1 < entries.len() {
+                        out.push(',');
+                    }
+                    out.push('\n');
+                }
+                push_indent(out, indent);
