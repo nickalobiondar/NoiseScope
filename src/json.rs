@@ -76,3 +76,25 @@ impl Json {
         self.write_pretty(&mut out, 0);
         out
     }
+
+    /// Serialize compactly (single line).
+    pub fn to_compact(&self) -> String {
+        let mut out = String::new();
+        self.write_compact(&mut out);
+        out
+    }
+
+    fn write_compact(&self, out: &mut String) {
+        match self {
+            Json::Null => out.push_str("null"),
+            Json::Bool(b) => out.push_str(if *b { "true" } else { "false" }),
+            Json::Num(n) => write_number(out, *n),
+            Json::Str(s) => write_string(out, s),
+            Json::Arr(items) => {
+                out.push('[');
+                for (i, item) in items.iter().enumerate() {
+                    if i > 0 {
+                        out.push(',');
+                    }
+                    item.write_compact(out);
+                }
