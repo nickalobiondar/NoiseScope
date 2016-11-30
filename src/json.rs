@@ -54,3 +54,25 @@ impl Json {
             _ => None,
         }
     }
+
+    pub fn as_array(&self) -> Option<&[Json]> {
+        match self {
+            Json::Arr(v) => Some(v.as_slice()),
+            _ => None,
+        }
+    }
+
+    /// Look up a key in an object value.
+    pub fn get(&self, key: &str) -> Option<&Json> {
+        match self {
+            Json::Obj(entries) => entries.iter().find(|(k, _)| k == key).map(|(_, v)| v),
+            _ => None,
+        }
+    }
+
+    /// Serialize with 2-space indentation.
+    pub fn to_pretty(&self) -> String {
+        let mut out = String::new();
+        self.write_pretty(&mut out, 0);
+        out
+    }
