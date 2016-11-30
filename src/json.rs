@@ -165,3 +165,25 @@ fn write_number(out: &mut String, n: f64) {
 }
 
 fn write_string(out: &mut String, s: &str) {
+    out.push('"');
+    for c in s.chars() {
+        match c {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            c if (c as u32) < 0x20 => {
+                let _ = write!(out, "\\u{:04x}", c as u32);
+            }
+            c => out.push(c),
+        }
+    }
+    out.push('"');
+}
+
+/// Ordered-map convenience builder used by report emitters.
+pub struct ObjBuilder {
+    entries: Vec<(String, Json)>,
+    seen: BTreeMap<String, ()>,
+}
