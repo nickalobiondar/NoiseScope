@@ -143,3 +143,25 @@ impl Json {
                     out.push('\n');
                 }
                 push_indent(out, indent);
+                out.push('}');
+            }
+            _ => self.write_compact(out),
+        }
+    }
+}
+
+fn push_indent(out: &mut String, indent: usize) {
+    for _ in 0..indent {
+        out.push_str("  ");
+    }
+}
+
+fn write_number(out: &mut String, n: f64) {
+    if n.fract() == 0.0 && n.is_finite() && n.abs() < 1e15 {
+        let _ = write!(out, "{}", n as i64);
+    } else {
+        let _ = write!(out, "{}", n);
+    }
+}
+
+fn write_string(out: &mut String, s: &str) {
