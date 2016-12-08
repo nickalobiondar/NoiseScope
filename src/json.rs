@@ -187,3 +187,25 @@ pub struct ObjBuilder {
     entries: Vec<(String, Json)>,
     seen: BTreeMap<String, ()>,
 }
+
+impl ObjBuilder {
+    pub fn new() -> Self {
+        ObjBuilder {
+            entries: Vec::new(),
+            seen: BTreeMap::new(),
+        }
+    }
+
+    pub fn set(mut self, key: &str, value: Json) -> Self {
+        if self.seen.insert(key.to_string(), ()).is_none() {
+            self.entries.push((key.to_string(), value));
+        } else {
+            for e in self.entries.iter_mut() {
+                if e.0 == key {
+                    e.1 = value;
+                    break;
+                }
+            }
+        }
+        self
+    }
