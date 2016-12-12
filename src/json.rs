@@ -209,3 +209,25 @@ impl ObjBuilder {
         }
         self
     }
+
+    pub fn build(self) -> Json {
+        Json::Obj(self.entries)
+    }
+}
+
+impl Default for ObjBuilder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+/// A JSON parse error with byte position.
+#[derive(Debug, Clone, PartialEq)]
+pub struct JsonError {
+    pub message: String,
+    pub position: usize,
+}
+
+impl std::fmt::Display for JsonError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "JSON error at byte {}: {}", self.position, self.message)
