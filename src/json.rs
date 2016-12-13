@@ -276,3 +276,25 @@ impl<'a> Parser<'a> {
                 b'/' if self.bytes.get(self.pos + 1) == Some(&b'/') => {
                     while let Some(c) = self.peek() {
                         self.pos += 1;
+                        if c == b'\n' {
+                            break;
+                        }
+                    }
+                }
+                _ => break,
+            }
+        }
+    }
+
+    fn parse_value(&mut self) -> Result<Json, JsonError> {
+        self.skip_ws();
+        match self.peek() {
+            Some(b'{') => self.parse_object(),
+            Some(b'[') => self.parse_array(),
+            Some(b'"') => Ok(Json::Str(self.parse_string()?)),
+            Some(b't') | Some(b'f') => self.parse_bool(),
+            Some(b'n') => self.parse_null(),
+            Some(c) if c == b'-' || c.is_ascii_digit() => self.parse_number(),
+            Some(_) => Err(self.err("unexpected character")),
+            None => Err(self.err("unexpected end of input")),
+        }
