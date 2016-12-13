@@ -253,3 +253,26 @@ pub fn parse(input: &str) -> Result<Json, JsonError> {
 
 struct Parser<'a> {
     bytes: &'a [u8],
+    pos: usize,
+}
+
+impl<'a> Parser<'a> {
+    fn err(&self, msg: &str) -> JsonError {
+        JsonError {
+            message: msg.to_string(),
+            position: self.pos,
+        }
+    }
+
+    fn peek(&self) -> Option<u8> {
+        self.bytes.get(self.pos).copied()
+    }
+
+    fn skip_ws(&mut self) {
+        while let Some(b) = self.peek() {
+            match b {
+                b' ' | b'\t' | b'\n' | b'\r' => self.pos += 1,
+                // Support line comments (`//`) as a friendly extension for fixtures.
+                b'/' if self.bytes.get(self.pos + 1) == Some(&b'/') => {
+                    while let Some(c) = self.peek() {
+                        self.pos += 1;
