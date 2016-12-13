@@ -408,3 +408,26 @@ impl<'a> Parser<'a> {
                             } else {
                                 return Err(self.err("invalid unicode escape"));
                             }
+                        }
+                        _ => return Err(self.err("invalid escape sequence")),
+                    }
+                    self.pos += 1;
+                }
+                Some(_) => {
+                    // Copy a full UTF-8 scalar.
+                    let start = self.pos;
+                    let len = utf8_len(self.bytes[self.pos]);
+                    if start + len > self.bytes.len() {
+                        return Err(self.err("truncated UTF-8 sequence"));
+                    }
+                    match std::str::from_utf8(&self.bytes[start..start + len]) {
+                        Ok(chunk) => s.push_str(chunk),
+                        Err(_) => return Err(self.err("invalid UTF-8 in string")),
+                    }
+                    self.pos += len;
+                }
+            }
+        }
+        Ok(s)
+    }
+
