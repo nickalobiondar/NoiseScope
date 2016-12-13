@@ -386,3 +386,25 @@ impl<'a> Parser<'a> {
                         Some(b'b') => s.push('\u{0008}'),
                         Some(b'f') => s.push('\u{000C}'),
                         Some(b'u') => {
+                            let cp = self.parse_hex4()?;
+                            // Handle surrogate pairs.
+                            if (0xD800..=0xDBFF).contains(&cp) {
+                                if self.bytes.get(self.pos + 1) == Some(&b'\\')
+                                    && self.bytes.get(self.pos + 2) == Some(&b'u')
+                                {
+                                    self.pos += 2;
+                                    let lo = self.parse_hex4()?;
+                                    let c = 0x10000 + ((cp - 0xD800) << 10) + (lo - 0xDC00);
+                                    if let Some(ch) = char::from_u32(c) {
+                                        s.push(ch);
+                                    } else {
+                                        return Err(self.err("invalid surrogate pair"));
+                                    }
+                                } else {
+                                    return Err(self.err("unpaired high surrogate"));
+                                }
+                            } else if let Some(ch) = char::from_u32(cp) {
+                                s.push(ch);
+                            } else {
+                                return Err(self.err("invalid unicode escape"));
+                            }
