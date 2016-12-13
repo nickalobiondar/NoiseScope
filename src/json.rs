@@ -298,3 +298,25 @@ impl<'a> Parser<'a> {
             Some(_) => Err(self.err("unexpected character")),
             None => Err(self.err("unexpected end of input")),
         }
+    }
+
+    fn parse_object(&mut self) -> Result<Json, JsonError> {
+        self.pos += 1; // consume '{'
+        let mut entries = Vec::new();
+        self.skip_ws();
+        if self.peek() == Some(b'}') {
+            self.pos += 1;
+            return Ok(Json::Obj(entries));
+        }
+        loop {
+            self.skip_ws();
+            if self.peek() != Some(b'"') {
+                return Err(self.err("expected string key in object"));
+            }
+            let key = self.parse_string()?;
+            self.skip_ws();
+            if self.peek() != Some(b':') {
+                return Err(self.err("expected ':' after object key"));
+            }
+            self.pos += 1;
+            let value = self.parse_value()?;
