@@ -231,3 +231,25 @@ pub struct JsonError {
 impl std::fmt::Display for JsonError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "JSON error at byte {}: {}", self.position, self.message)
+    }
+}
+
+impl std::error::Error for JsonError {}
+
+/// Parse a JSON document from a string.
+pub fn parse(input: &str) -> Result<Json, JsonError> {
+    let mut p = Parser {
+        bytes: input.as_bytes(),
+        pos: 0,
+    };
+    p.skip_ws();
+    let value = p.parse_value()?;
+    p.skip_ws();
+    if p.pos != p.bytes.len() {
+        return Err(p.err("trailing characters after JSON document"));
+    }
+    Ok(value)
+}
+
+struct Parser<'a> {
+    bytes: &'a [u8],
