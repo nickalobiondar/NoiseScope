@@ -364,3 +364,25 @@ impl<'a> Parser<'a> {
         Ok(Json::Arr(items))
     }
 
+    fn parse_string(&mut self) -> Result<String, JsonError> {
+        self.pos += 1; // consume opening quote
+        let mut s = String::new();
+        loop {
+            match self.peek() {
+                None => return Err(self.err("unterminated string")),
+                Some(b'"') => {
+                    self.pos += 1;
+                    break;
+                }
+                Some(b'\\') => {
+                    self.pos += 1;
+                    match self.peek() {
+                        Some(b'"') => s.push('"'),
+                        Some(b'\\') => s.push('\\'),
+                        Some(b'/') => s.push('/'),
+                        Some(b'n') => s.push('\n'),
+                        Some(b't') => s.push('\t'),
+                        Some(b'r') => s.push('\r'),
+                        Some(b'b') => s.push('\u{0008}'),
+                        Some(b'f') => s.push('\u{000C}'),
+                        Some(b'u') => {
