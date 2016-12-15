@@ -431,3 +431,25 @@ impl<'a> Parser<'a> {
         Ok(s)
     }
 
+    fn parse_hex4(&mut self) -> Result<u32, JsonError> {
+        let mut value = 0u32;
+        for _ in 0..4 {
+            self.pos += 1;
+            let d = match self.peek() {
+                Some(c @ b'0'..=b'9') => (c - b'0') as u32,
+                Some(c @ b'a'..=b'f') => (c - b'a' + 10) as u32,
+                Some(c @ b'A'..=b'F') => (c - b'A' + 10) as u32,
+                _ => return Err(self.err("invalid \\u escape")),
+            };
+            value = value * 16 + d;
+        }
+        Ok(value)
+    }
+
+    fn parse_number(&mut self) -> Result<Json, JsonError> {
+        let start = self.pos;
+        if self.peek() == Some(b'-') {
+            self.pos += 1;
+        }
+        while let Some(c) = self.peek() {
+            if c.is_ascii_digit() {
