@@ -38,3 +38,19 @@ pub enum ViolationKind {
 impl ViolationKind {
     pub fn as_str(&self) -> &'static str {
         match self {
+            ViolationKind::UnexpectedMessage => "unexpected_message",
+            ViolationKind::RoleMismatch => "role_mismatch",
+            ViolationKind::NonceReplay => "nonce_replay",
+            ViolationKind::SequenceViolation => "sequence_violation",
+            ViolationKind::NotAccepting => "not_accepting",
+        }
+    }
+}
+
+/// A single invariant violation encountered during replay.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Violation {
+    pub kind: ViolationKind,
+    /// Index of the offending event (or the event count for `NotAccepting`).
+    pub event_index: usize,
+    /// The event id, if applicable.
