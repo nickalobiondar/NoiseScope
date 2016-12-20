@@ -54,3 +54,19 @@ pub struct Violation {
     /// Index of the offending event (or the event count for `NotAccepting`).
     pub event_index: usize,
     /// The event id, if applicable.
+    pub event_id: Option<String>,
+    pub state: String,
+    pub detail: String,
+}
+
+/// One step recorded during a successful (or partial) walk of the machine.
+#[derive(Debug, Clone, PartialEq)]
+pub struct PathStep {
+    pub event_index: usize,
+    pub event_label: String,
+    pub from: String,
+    pub to: String,
+}
+
+/// The full outcome of replaying a transcript against a spec.
+#[derive(Debug, Clone, PartialEq)]
