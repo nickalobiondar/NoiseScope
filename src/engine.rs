@@ -70,3 +70,19 @@ pub struct PathStep {
 
 /// The full outcome of replaying a transcript against a spec.
 #[derive(Debug, Clone, PartialEq)]
+pub struct ReplayResult {
+    pub protocol: String,
+    /// State the machine halted in.
+    pub final_state: String,
+    pub reached_accepting: bool,
+    pub violations: Vec<Violation>,
+    pub path: Vec<PathStep>,
+    /// Number of events actually consumed before the run halted (or all).
+    pub consumed: usize,
+}
+
+impl ReplayResult {
+    /// True when no invariants were violated and the machine accepted.
+    pub fn is_conforming(&self) -> bool {
+        self.violations.is_empty() && self.reached_accepting
+    }
