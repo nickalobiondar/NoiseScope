@@ -102,3 +102,19 @@ pub fn replay(spec: &ProtocolSpec, transcript: &Transcript) -> ReplayResult {
     let mut path = Vec::new();
     let mut consumed = 0usize;
 
+    for (i, ev) in transcript.events.iter().enumerate() {
+        consumed = i + 1;
+        let candidates = spec.matching(&state, &ev.role, &ev.msg);
+
+        if candidates.is_empty() {
+            // Distinguish "wrong role" from "wrong message entirely".
+            let msg_exists_for_other_role = spec
+                .transitions
+                .iter()
+                .any(|t| t.from == state && t.msg == ev.msg && t.role != ev.role);
+            let kind = if msg_exists_for_other_role {
+                ViolationKind::RoleMismatch
+            } else {
+                ViolationKind::UnexpectedMessage
+            };
+            let expected = expected_here(spec, &state);
