@@ -149,3 +149,19 @@ pub fn replay(spec: &ProtocolSpec, transcript: &Transcript) -> ReplayResult {
                         "transition {}:{} requires a nonce but none present",
                         ev.role, ev.msg
                     ),
+                }),
+                Some(n) if seen_nonces.contains(&n) => violations.push(Violation {
+                    kind: ViolationKind::NonceReplay,
+                    event_index: i,
+                    event_id: Some(ev.id.clone()),
+                    state: state.clone(),
+                    detail: format!("nonce {n} replayed (already observed)"),
+                }),
+                Some(n) => {
+                    seen_nonces.insert(n);
+                }
+            }
+        } else if let Some(n) = ev.nonce {
+            // Track nonces even when not required, so a later required event can
+            // detect a replay of a value used earlier.
+            seen_nonces.insert(n);
