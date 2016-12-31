@@ -118,3 +118,19 @@ pub fn replay(spec: &ProtocolSpec, transcript: &Transcript) -> ReplayResult {
                 ViolationKind::UnexpectedMessage
             };
             let expected = expected_here(spec, &state);
+            violations.push(Violation {
+                kind,
+                event_index: i,
+                event_id: Some(ev.id.clone()),
+                state: state.clone(),
+                detail: format!(
+                    "got {}:{} in state `{}`; expected one of [{}]",
+                    ev.role,
+                    ev.msg,
+                    state,
+                    expected.join(", ")
+                ),
+            });
+            continue; // fail-soft: do not advance
+        }
+
