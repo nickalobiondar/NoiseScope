@@ -86,3 +86,19 @@ impl ReplayResult {
     pub fn is_conforming(&self) -> bool {
         self.violations.is_empty() && self.reached_accepting
     }
+}
+
+/// Replay a transcript against a spec, collecting all violations.
+///
+/// The engine is *fail-soft*: after an `UnexpectedMessage`/`RoleMismatch` it
+/// does not advance the state (the offending event is skipped) so that later
+/// events can still be evaluated. This yields richer divergence reports than a
+/// fail-fast walk while remaining deterministic.
+pub fn replay(spec: &ProtocolSpec, transcript: &Transcript) -> ReplayResult {
+    let mut state = spec.initial.clone();
+    let mut seen_nonces: BTreeSet<u64> = BTreeSet::new();
+    let mut last_seq: BTreeMap<String, u64> = BTreeMap::new();
+    let mut violations = Vec::new();
+    let mut path = Vec::new();
+    let mut consumed = 0usize;
+
