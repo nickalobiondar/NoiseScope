@@ -165,3 +165,19 @@ pub fn replay(spec: &ProtocolSpec, transcript: &Transcript) -> ReplayResult {
             // Track nonces even when not required, so a later required event can
             // detect a replay of a value used earlier.
             seen_nonces.insert(n);
+        }
+
+        // Sequence invariant.
+        if t.requires_seq {
+            let prev = last_seq.get(&ev.role).copied();
+            match ev.seq {
+                None => violations.push(Violation {
+                    kind: ViolationKind::SequenceViolation,
+                    event_index: i,
+                    event_id: Some(ev.id.clone()),
+                    state: state.clone(),
+                    detail: format!(
+                        "transition {}:{} requires seq but none present",
+                        ev.role, ev.msg
+                    ),
+                }),
