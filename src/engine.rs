@@ -134,3 +134,18 @@ pub fn replay(spec: &ProtocolSpec, transcript: &Transcript) -> ReplayResult {
             continue; // fail-soft: do not advance
         }
 
+        // Deterministically choose the first matching transition.
+        let t = candidates[0];
+
+        // Nonce invariant.
+        if t.requires_fresh_nonce {
+            match ev.nonce {
+                None => violations.push(Violation {
+                    kind: ViolationKind::NonceReplay,
+                    event_index: i,
+                    event_id: Some(ev.id.clone()),
+                    state: state.clone(),
+                    detail: format!(
+                        "transition {}:{} requires a nonce but none present",
+                        ev.role, ev.msg
+                    ),
