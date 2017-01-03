@@ -197,3 +197,19 @@ pub fn replay(spec: &ProtocolSpec, transcript: &Transcript) -> ReplayResult {
                     }
                     last_seq.insert(ev.role.clone(), s);
                 }
+            }
+        } else if let Some(s) = ev.seq {
+            last_seq.insert(ev.role.clone(), s);
+        }
+
+        // Advance the state machine regardless of nonce/seq problems: those are
+        // metadata invariants layered on top of a structurally valid step.
+        path.push(PathStep {
+            event_index: i,
+            event_label: ev.label(),
+            from: state.clone(),
+            to: t.to.clone(),
+        });
+        state = t.to.clone();
+    }
+
