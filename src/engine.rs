@@ -213,3 +213,19 @@ pub fn replay(spec: &ProtocolSpec, transcript: &Transcript) -> ReplayResult {
         state = t.to.clone();
     }
 
+    let reached_accepting = spec.is_accepting(&state);
+    if !reached_accepting {
+        violations.push(Violation {
+            kind: ViolationKind::NotAccepting,
+            event_index: transcript.events.len(),
+            event_id: None,
+            state: state.clone(),
+            detail: format!(
+                "final state `{}` is not accepting (accepting: [{}])",
+                state,
+                spec.accepting.join(", ")
+            ),
+        });
+    }
+
+    ReplayResult {
