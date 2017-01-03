@@ -229,3 +229,19 @@ pub fn replay(spec: &ProtocolSpec, transcript: &Transcript) -> ReplayResult {
     }
 
     ReplayResult {
+        protocol: spec.name.clone(),
+        final_state: state,
+        reached_accepting,
+        violations,
+        path,
+        consumed,
+    }
+}
+
+/// The set of `role:msg` labels accepted from a given state.
+fn expected_here(spec: &ProtocolSpec, state: &str) -> Vec<String> {
+    let mut v: Vec<String> = spec
+        .transitions
+        .iter()
+        .filter(|t| t.from == state)
+        .map(|t| format!("{}:{}", t.role, t.msg))
