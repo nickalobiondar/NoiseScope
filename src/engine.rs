@@ -181,3 +181,19 @@ pub fn replay(spec: &ProtocolSpec, transcript: &Transcript) -> ReplayResult {
                         ev.role, ev.msg
                     ),
                 }),
+                Some(s) => {
+                    let expected = prev.map(|p| p + 1).unwrap_or(0);
+                    if s != expected {
+                        violations.push(Violation {
+                            kind: ViolationKind::SequenceViolation,
+                            event_index: i,
+                            event_id: Some(ev.id.clone()),
+                            state: state.clone(),
+                            detail: format!(
+                                "role `{}` seq={} but expected {}",
+                                ev.role, s, expected
+                            ),
+                        });
+                    }
+                    last_seq.insert(ev.role.clone(), s);
+                }
