@@ -245,3 +245,19 @@ fn expected_here(spec: &ProtocolSpec, state: &str) -> Vec<String> {
         .iter()
         .filter(|t| t.from == state)
         .map(|t| format!("{}:{}", t.role, t.msg))
+        .collect();
+    v.sort();
+    v.dedup();
+    v
+}
+
+/// Convenience: does replaying this transcript conform to the spec?
+pub fn conforms(spec: &ProtocolSpec, transcript: &Transcript) -> bool {
+    replay(spec, transcript).is_conforming()
+}
+
+/// Build a transcript from an event slice for the given spec.
+pub fn transcript_from(protocol: &str, events: &[Event]) -> Transcript {
+    Transcript {
+        protocol: protocol.to_string(),
+        events: events.to_vec(),
