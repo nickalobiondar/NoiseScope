@@ -261,3 +261,19 @@ pub fn transcript_from(protocol: &str, events: &[Event]) -> Transcript {
     Transcript {
         protocol: protocol.to_string(),
         events: events.to_vec(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::model::{Event, Transition};
+
+    fn spec() -> ProtocolSpec {
+        ProtocolSpec {
+            name: "p".into(),
+            roles: vec!["i".into(), "r".into()],
+            initial: "s0".into(),
+            accepting: vec!["s2".into()],
+            states: vec!["s0".into(), "s1".into(), "s2".into()],
+            transitions: vec![
