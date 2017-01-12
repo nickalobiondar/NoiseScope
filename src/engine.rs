@@ -340,3 +340,19 @@ mod tests {
             .violations
             .iter()
             .any(|v| v.kind == ViolationKind::RoleMismatch));
+    }
+
+    #[test]
+    fn nonce_replay_detected() {
+        let t = transcript_from(
+            "p",
+            &[
+                ev("a", "i", "e", Some(5), None),
+                // second e can't happen from s1, so craft a self-loop-free replay:
+            ],
+        );
+        // Force replay by re-running with a duplicate nonce in a 2-step spec:
+        let _ = t;
+        let mut s = spec();
+        s.transitions.push(Transition {
+            from: "s1".into(),
