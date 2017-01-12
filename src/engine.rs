@@ -292,3 +292,19 @@ mod tests {
                     role: "r".into(),
                     msg: "ee".into(),
                     requires_fresh_nonce: false,
+                    requires_seq: true,
+                    note: None,
+                },
+            ],
+            description: None,
+        }
+    }
+
+    fn ev(id: &str, role: &str, msg: &str, nonce: Option<u64>, seq: Option<u64>) -> Event {
+        let mut e = Event::new(id, role, msg);
+        e.nonce = nonce;
+        e.seq = seq;
+        e
+    }
+
+    #[test]
