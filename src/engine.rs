@@ -308,3 +308,19 @@ mod tests {
     }
 
     #[test]
+    fn happy_path_conforms() {
+        let t = transcript_from(
+            "p",
+            &[
+                ev("a", "i", "e", Some(1), None),
+                ev("b", "r", "ee", None, Some(0)),
+            ],
+        );
+        let r = replay(&spec(), &t);
+        assert!(r.is_conforming(), "violations: {:?}", r.violations);
+        assert_eq!(r.path.len(), 2);
+    }
+
+    #[test]
+    fn unexpected_message_detected() {
+        let t = transcript_from("p", &[ev("a", "r", "ee", None, Some(0))]);
