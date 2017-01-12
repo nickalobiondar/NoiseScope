@@ -324,3 +324,19 @@ mod tests {
     #[test]
     fn unexpected_message_detected() {
         let t = transcript_from("p", &[ev("a", "r", "ee", None, Some(0))]);
+        let r = replay(&spec(), &t);
+        assert!(r
+            .violations
+            .iter()
+            .any(|v| v.kind == ViolationKind::UnexpectedMessage));
+    }
+
+    #[test]
+    fn role_mismatch_detected() {
+        // "e" exists from s0 but for role i, not r.
+        let t = transcript_from("p", &[ev("a", "r", "e", Some(1), None)]);
+        let r = replay(&spec(), &t);
+        assert!(r
+            .violations
+            .iter()
+            .any(|v| v.kind == ViolationKind::RoleMismatch));
