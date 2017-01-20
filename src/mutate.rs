@@ -39,3 +39,17 @@ impl SplitMix64 {
         z = (z ^ (z >> 30)).wrapping_mul(0xBF58_476D_1CE4_E5B9);
         z = (z ^ (z >> 27)).wrapping_mul(0x94D0_49BB_1331_11EB);
         z ^ (z >> 31)
+    }
+
+    /// Uniform-ish integer in `[0, n)`. Returns 0 when `n == 0`.
+    pub fn below(&mut self, n: usize) -> usize {
+        if n == 0 {
+            0
+        } else {
+            (self.next_u64() % (n as u64)) as usize
+        }
+    }
+}
+
+/// A single deterministic edit to a transcript.
+#[derive(Debug, Clone, PartialEq)]
