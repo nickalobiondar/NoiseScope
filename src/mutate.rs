@@ -53,3 +53,17 @@ impl SplitMix64 {
 
 /// A single deterministic edit to a transcript.
 #[derive(Debug, Clone, PartialEq)]
+pub enum Mutation {
+    /// Remove the event at `index`.
+    Drop { index: usize },
+    /// Insert a copy of the event at `index` immediately after it.
+    Duplicate { index: usize },
+    /// Swap the events at `a` and `b`.
+    Reorder { a: usize, b: usize },
+    /// Corrupt a metadata field of the event at `index`.
+    CorruptMeta { index: usize, field: MetaField },
+}
+
+/// Which metadata field a [`Mutation::CorruptMeta`] targets.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum MetaField {
