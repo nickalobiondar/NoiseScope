@@ -80,3 +80,17 @@ impl Mutation {
     pub fn kind(&self) -> &'static str {
         match self {
             Mutation::Drop { .. } => "drop",
+            Mutation::Duplicate { .. } => "duplicate",
+            Mutation::Reorder { .. } => "reorder",
+            Mutation::CorruptMeta { .. } => "corrupt_meta",
+        }
+    }
+
+    pub fn describe(&self) -> String {
+        match self {
+            Mutation::Drop { index } => format!("drop event #{index}"),
+            Mutation::Duplicate { index } => format!("duplicate event #{index}"),
+            Mutation::Reorder { a, b } => format!("reorder events #{a} <-> #{b}"),
+            Mutation::CorruptMeta { index, field } => {
+                let f = match field {
+                    MetaField::Nonce => "nonce",
