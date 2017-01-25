@@ -135,3 +135,16 @@ pub fn apply_one(transcript: &Transcript, m: &Mutation, roles: &[String]) -> Tra
                 match field {
                     MetaField::Nonce => {
                         // Reuse a fixed value to force potential replay/absence.
+                        ev.nonce = match ev.nonce {
+                            Some(0) => None,
+                            _ => Some(0),
+                        };
+                    }
+                    MetaField::Seq => {
+                        ev.seq = Some(ev.seq.map(|s| s.wrapping_add(7)).unwrap_or(99));
+                    }
+                    MetaField::Role => {
+                        if let Some(other) = roles.iter().find(|r| *r != &ev.role) {
+                            ev.role = other.clone();
+                        }
+                    }
