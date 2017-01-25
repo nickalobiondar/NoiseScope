@@ -94,3 +94,16 @@ impl Mutation {
             Mutation::CorruptMeta { index, field } => {
                 let f = match field {
                     MetaField::Nonce => "nonce",
+                    MetaField::Seq => "seq",
+                    MetaField::Role => "role",
+                };
+                format!("corrupt {f} of event #{index}")
+            }
+        }
+    }
+}
+
+/// Apply a single mutation to a transcript, returning the mutated copy.
+///
+/// Mutations that reference an out-of-range index are treated as no-ops so that
+/// a mutation plan generated for one transcript length stays well-defined after
