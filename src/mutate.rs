@@ -121,3 +121,17 @@ pub fn apply_one(transcript: &Transcript, m: &Mutation, roles: &[String]) -> Tra
             if index < out.events.len() {
                 let mut copy = out.events[index].clone();
                 copy.id = format!("{}~dup", copy.id);
+                out.events.insert(index + 1, copy);
+            }
+        }
+        Mutation::Reorder { a, b } => {
+            if a < n && b < n && a != b {
+                out.events.swap(a, b);
+            }
+        }
+        Mutation::CorruptMeta { index, field } => {
+            if index < out.events.len() {
+                let ev = &mut out.events[index];
+                match field {
+                    MetaField::Nonce => {
+                        // Reuse a fixed value to force potential replay/absence.
