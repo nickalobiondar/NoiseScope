@@ -107,3 +107,17 @@ impl Mutation {
 ///
 /// Mutations that reference an out-of-range index are treated as no-ops so that
 /// a mutation plan generated for one transcript length stays well-defined after
+/// earlier drops shrink the list. This keeps minimization total and panic-free.
+pub fn apply_one(transcript: &Transcript, m: &Mutation, roles: &[String]) -> Transcript {
+    let mut out = transcript.clone();
+    let n = out.events.len();
+    match *m {
+        Mutation::Drop { index } => {
+            if index < out.events.len() {
+                out.events.remove(index);
+            }
+        }
+        Mutation::Duplicate { index } => {
+            if index < out.events.len() {
+                let mut copy = out.events[index].clone();
+                copy.id = format!("{}~dup", copy.id);
