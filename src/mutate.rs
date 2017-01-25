@@ -67,3 +67,16 @@ pub enum Mutation {
 /// Which metadata field a [`Mutation::CorruptMeta`] targets.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum MetaField {
+    /// Zero-out or reuse the nonce.
+    Nonce,
+    /// Perturb the sequence number.
+    Seq,
+    /// Flip the role to a different declared role.
+    Role,
+}
+
+impl Mutation {
+    /// A stable human/JSON label for reports.
+    pub fn kind(&self) -> &'static str {
+        match self {
+            Mutation::Drop { .. } => "drop",
