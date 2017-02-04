@@ -162,3 +162,16 @@ pub fn apply_all(transcript: &Transcript, plan: &[Mutation], roles: &[String]) -
         cur = apply_one(&cur, m, roles);
     }
     cur
+}
+
+/// Deterministically generate a mutation plan of `len` edits for a transcript.
+///
+/// The generator only ever references indices valid for the *original*
+/// transcript length; [`apply_one`] tolerates drift caused by earlier drops.
+pub fn generate_plan(rng: &mut SplitMix64, transcript_len: usize, len: usize) -> Vec<Mutation> {
+    let mut plan = Vec::with_capacity(len);
+    if transcript_len == 0 {
+        return plan;
+    }
+    for _ in 0..len {
+        let choice = rng.below(4);
