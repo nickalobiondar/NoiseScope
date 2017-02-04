@@ -148,3 +148,17 @@ pub fn apply_one(transcript: &Transcript, m: &Mutation, roles: &[String]) -> Tra
                             ev.role = other.clone();
                         }
                     }
+                }
+            }
+        }
+    }
+    out
+}
+
+/// Apply a sequence of mutations in order.
+pub fn apply_all(transcript: &Transcript, plan: &[Mutation], roles: &[String]) -> Transcript {
+    let mut cur = transcript.clone();
+    for m in plan {
+        cur = apply_one(&cur, m, roles);
+    }
+    cur
