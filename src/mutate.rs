@@ -175,3 +175,17 @@ pub fn generate_plan(rng: &mut SplitMix64, transcript_len: usize, len: usize) ->
     }
     for _ in 0..len {
         let choice = rng.below(4);
+        let m = match choice {
+            0 => Mutation::Drop {
+                index: rng.below(transcript_len),
+            },
+            1 => Mutation::Duplicate {
+                index: rng.below(transcript_len),
+            },
+            2 => {
+                let a = rng.below(transcript_len);
+                let mut b = rng.below(transcript_len);
+                if a == b {
+                    b = (b + 1) % transcript_len;
+                }
+                Mutation::Reorder { a, b }
