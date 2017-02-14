@@ -203,3 +203,16 @@ pub fn generate_plan(rng: &mut SplitMix64, transcript_len: usize, len: usize) ->
             }
         };
         plan.push(m);
+    }
+    plan
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::model::Event;
+
+    fn t3() -> Transcript {
+        let mut t = Transcript::new("p");
+        for i in 0..3 {
+            let mut e = Event::new(format!("e{i}"), "i", "m");
