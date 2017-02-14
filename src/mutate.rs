@@ -189,3 +189,17 @@ pub fn generate_plan(rng: &mut SplitMix64, transcript_len: usize, len: usize) ->
                     b = (b + 1) % transcript_len;
                 }
                 Mutation::Reorder { a, b }
+            }
+            _ => {
+                let field = match rng.below(3) {
+                    0 => MetaField::Nonce,
+                    1 => MetaField::Seq,
+                    _ => MetaField::Role,
+                };
+                Mutation::CorruptMeta {
+                    index: rng.below(transcript_len),
+                    field,
+                }
+            }
+        };
+        plan.push(m);
