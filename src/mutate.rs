@@ -216,3 +216,17 @@ mod tests {
         let mut t = Transcript::new("p");
         for i in 0..3 {
             let mut e = Event::new(format!("e{i}"), "i", "m");
+            e.nonce = Some(i as u64);
+            e.seq = Some(i as u64);
+            t.events.push(e);
+        }
+        t
+    }
+
+    #[test]
+    fn splitmix_is_deterministic() {
+        let mut a = SplitMix64::new(42);
+        let mut b = SplitMix64::new(42);
+        for _ in 0..100 {
+            assert_eq!(a.next_u64(), b.next_u64());
+        }
