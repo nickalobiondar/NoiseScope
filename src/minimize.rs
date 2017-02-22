@@ -22,3 +22,15 @@ pub type FailPredicate<'a> = dyn Fn(&Transcript) -> bool + 'a;
 #[derive(Debug, Clone)]
 pub struct Minimized {
     pub plan: Vec<Mutation>,
+    /// Number of predicate evaluations performed (useful for reports/tests).
+    pub evaluations: usize,
+    pub original_len: usize,
+}
+
+/// Minimize `plan` so that applying it to `base` still satisfies `fails`.
+///
+/// Requires that the *full* plan already fails; if it does not, the original
+/// plan is returned unchanged (with `evaluations == 0`).
+pub fn minimize(
+    base: &Transcript,
+    roles: &[String],
