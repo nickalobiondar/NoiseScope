@@ -230,3 +230,16 @@ mod tests {
         for _ in 0..100 {
             assert_eq!(a.next_u64(), b.next_u64());
         }
+    }
+
+    #[test]
+    fn drop_removes_event() {
+        let out = apply_one(&t3(), &Mutation::Drop { index: 1 }, &[]);
+        assert_eq!(out.events.len(), 2);
+        assert_eq!(out.events[1].id, "e2");
+    }
+
+    #[test]
+    fn duplicate_inserts_copy() {
+        let out = apply_one(&t3(), &Mutation::Duplicate { index: 0 }, &[]);
+        assert_eq!(out.events.len(), 4);
