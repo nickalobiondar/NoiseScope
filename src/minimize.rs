@@ -34,3 +34,15 @@ pub struct Minimized {
 pub fn minimize(
     base: &Transcript,
     roles: &[String],
+    plan: &[Mutation],
+    fails: &FailPredicate<'_>,
+) -> Minimized {
+    let original_len = plan.len();
+    let mut evaluations = 0usize;
+
+    // Guard: only minimize genuine failures.
+    let full = apply_all(base, plan, roles);
+    evaluations += 1;
+    if !fails(&full) {
+        return Minimized {
+            plan: plan.to_vec(),
