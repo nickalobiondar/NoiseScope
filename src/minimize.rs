@@ -57,3 +57,15 @@ pub fn minimize(
         changed = false;
         let mut i = 0;
         while i < current.len() {
+            let mut candidate = current.clone();
+            candidate.remove(i);
+            let mutated = apply_all(base, &candidate, roles);
+            evaluations += 1;
+            if fails(&mutated) {
+                // Removal preserved the failure: keep the shorter plan.
+                current = candidate;
+                changed = true;
+                // Do not advance `i`; the next element shifted into this slot.
+            } else {
+                i += 1;
+            }
