@@ -69,3 +69,15 @@ pub fn minimize(
             } else {
                 i += 1;
             }
+        }
+    }
+
+    Minimized {
+        plan: current,
+        evaluations,
+        original_len,
+    }
+}
+
+#[cfg(test)]
+mod tests {
