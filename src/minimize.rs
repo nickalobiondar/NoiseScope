@@ -81,3 +81,15 @@ pub fn minimize(
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+    use crate::model::{Event, Transcript};
+    use crate::mutate::Mutation;
+
+    fn base() -> Transcript {
+        let mut t = Transcript::new("p");
+        for i in 0..5 {
+            t.events.push(Event::new(format!("e{i}"), "i", "m"));
+        }
+        t
+    }
+
