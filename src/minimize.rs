@@ -46,3 +46,14 @@ pub fn minimize(
     if !fails(&full) {
         return Minimized {
             plan: plan.to_vec(),
+            evaluations,
+            original_len,
+        };
+    }
+
+    let mut current: Vec<Mutation> = plan.to_vec();
+    let mut changed = true;
+    while changed {
+        changed = false;
+        let mut i = 0;
+        while i < current.len() {
