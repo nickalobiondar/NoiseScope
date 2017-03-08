@@ -93,3 +93,14 @@ mod tests {
         t
     }
 
+    #[test]
+    fn removes_irrelevant_mutations() {
+        // The transcript "fails" iff it has fewer than 5 events.
+        let fails = |t: &Transcript| t.events.len() < 5;
+        // Plan: one meaningful drop + several no-op reorders that don't shrink.
+        let plan = vec![
+            Mutation::Reorder { a: 0, b: 1 },
+            Mutation::Drop { index: 2 },
+            Mutation::Reorder { a: 1, b: 3 },
+        ];
+        let m = minimize(&base(), &[], &plan, &fails);
