@@ -58,3 +58,21 @@ impl Default for FuzzConfig {
         }
     }
 }
+
+/// Run the fuzzer. The failure predicate is "does not conform" — that is, the
+/// mutated transcript either violates an invariant or fails to reach an
+/// accepting state.
+pub fn fuzz(spec: &ProtocolSpec, transcript: &Transcript, cfg: &FuzzConfig) -> FuzzReport {
+    let baseline = replay(spec, transcript);
+    let mut findings: Vec<Finding> = Vec::new();
+
+    let roles = spec.roles.clone();
+    let fails = |t: &Transcript| !replay(spec, t).is_conforming();
+
+    let mut rng = SplitMix64::new(cfg.seed);
+    let mut seen_minimal: Vec<Vec<Mutation>> = Vec::new();
+
+    for trial in 0..cfg.trials {
+        if cfg.max_findings != 0 && findings.len() >= cfg.max_findings {
+            break;
+        }
