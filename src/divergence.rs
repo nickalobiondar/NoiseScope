@@ -40,3 +40,21 @@ pub struct FuzzReport {
 
 /// Parameters controlling a fuzzing run.
 #[derive(Debug, Clone)]
+pub struct FuzzConfig {
+    pub seed: u64,
+    pub trials: usize,
+    pub max_plan_len: usize,
+    /// Stop after this many distinct findings (0 = unlimited within trials).
+    pub max_findings: usize,
+}
+
+impl Default for FuzzConfig {
+    fn default() -> Self {
+        FuzzConfig {
+            seed: 0x5EED,
+            trials: 256,
+            max_plan_len: 4,
+            max_findings: 8,
+        }
+    }
+}
