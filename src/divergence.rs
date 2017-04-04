@@ -76,3 +76,21 @@ pub fn fuzz(spec: &ProtocolSpec, transcript: &Transcript, cfg: &FuzzConfig) -> F
         if cfg.max_findings != 0 && findings.len() >= cfg.max_findings {
             break;
         }
+        // Vary plan length deterministically between 1..=max_plan_len.
+        let plan_len = 1 + (trial % cfg.max_plan_len.max(1));
+        let trial_seed = cfg.seed ^ ((trial as u64).wrapping_mul(0x9E37_79B9_7F4A_7C15));
+        let mut trial_rng = SplitMix64::new(trial_seed);
+        let plan = generate_plan(&mut trial_rng, transcript.events.len(), plan_len);
+        // Consume the top-level rng too so runs with different trial counts stay
+        // related but distinct.
+        let _ = rng.next_u64();
+
+        if plan.is_empty() {
+            continue;
+        }
+        let mutated = apply_all(transcript, &plan, &roles);
+        let result = replay(spec, &mutated);
+        if result.is_conforming() {
+            continue; // no divergence
+        }
+
