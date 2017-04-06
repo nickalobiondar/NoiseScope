@@ -94,3 +94,21 @@ pub fn fuzz(spec: &ProtocolSpec, transcript: &Transcript, cfg: &FuzzConfig) -> F
             continue; // no divergence
         }
 
+        let minimized = minimize(transcript, &roles, &plan, &fails);
+        // Deduplicate by minimized plan so the report stays crisp.
+        if seen_minimal.iter().any(|p| p == &minimized.plan) {
+            continue;
+        }
+        seen_minimal.push(minimized.plan.clone());
+
+        let min_mutated = apply_all(transcript, &minimized.plan, &roles);
+        let min_result = replay(spec, &min_mutated);
+
+        findings.push(Finding {
+            seed: trial_seed,
+            plan,
+            minimized,
+            result: min_result,
+        });
+    }
+
