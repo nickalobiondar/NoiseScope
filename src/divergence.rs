@@ -112,3 +112,21 @@ pub fn fuzz(spec: &ProtocolSpec, transcript: &Transcript, cfg: &FuzzConfig) -> F
         });
     }
 
+    FuzzReport {
+        protocol: spec.name.clone(),
+        baseline_conforming: baseline.is_conforming(),
+        baseline: baseline.clone(),
+        trials: cfg.trials,
+        findings,
+    }
+}
+
+// ---------------------------------------------------------------------------
+// JSON serialization
+// ---------------------------------------------------------------------------
+
+fn violation_json(v: &Violation) -> Json {
+    ObjBuilder::new()
+        .set("kind", Json::Str(v.kind.as_str().to_string()))
+        .set("event_index", Json::Num(v.event_index as f64))
+        .set(
