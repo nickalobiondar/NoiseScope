@@ -130,3 +130,22 @@ fn violation_json(v: &Violation) -> Json {
         .set("kind", Json::Str(v.kind.as_str().to_string()))
         .set("event_index", Json::Num(v.event_index as f64))
         .set(
+            "event_id",
+            v.event_id.clone().map(Json::Str).unwrap_or(Json::Null),
+        )
+        .set("state", Json::Str(v.state.clone()))
+        .set("detail", Json::Str(v.detail.clone()))
+        .build()
+}
+
+fn mutation_json(m: &Mutation) -> Json {
+    let b = ObjBuilder::new().set("kind", Json::Str(m.kind().to_string()));
+    let b = match m {
+        Mutation::Drop { index } => b.set("index", Json::Num(*index as f64)),
+        Mutation::Duplicate { index } => b.set("index", Json::Num(*index as f64)),
+        Mutation::Reorder { a, b: bb } => b
+            .set("a", Json::Num(*a as f64))
+            .set("b", Json::Num(*bb as f64)),
+        Mutation::CorruptMeta { index, field } => {
+            let f = match field {
+                crate::mutate::MetaField::Nonce => "nonce",
