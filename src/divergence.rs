@@ -167,3 +167,21 @@ fn replay_json(r: &ReplayResult) -> Json {
     let path: Vec<Json> = r
         .path
         .iter()
+        .map(|s| {
+            ObjBuilder::new()
+                .set("event_index", Json::Num(s.event_index as f64))
+                .set("event", Json::Str(s.event_label.clone()))
+                .set("from", Json::Str(s.from.clone()))
+                .set("to", Json::Str(s.to.clone()))
+                .build()
+        })
+        .collect();
+    ObjBuilder::new()
+        .set("final_state", Json::Str(r.final_state.clone()))
+        .set("reached_accepting", Json::Bool(r.reached_accepting))
+        .set("conforming", Json::Bool(r.is_conforming()))
+        .set("consumed", Json::Num(r.consumed as f64))
+        .set(
+            "violations",
+            Json::Arr(r.violations.iter().map(violation_json).collect()),
+        )
