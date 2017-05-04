@@ -185,3 +185,21 @@ fn replay_json(r: &ReplayResult) -> Json {
             "violations",
             Json::Arr(r.violations.iter().map(violation_json).collect()),
         )
+        .set("path", Json::Arr(path))
+        .build()
+}
+
+fn finding_json(f: &Finding) -> Json {
+    ObjBuilder::new()
+        .set("seed", Json::Num(f.seed as f64))
+        .set("original_plan", plan_json(&f.plan))
+        .set("minimized_plan", plan_json(&f.minimized.plan))
+        .set("minimized_len", Json::Num(f.minimized.plan.len() as f64))
+        .set("original_len", Json::Num(f.minimized.original_len as f64))
+        .set(
+            "minimizer_evaluations",
+            Json::Num(f.minimized.evaluations as f64),
+        )
+        .set("divergence", replay_json(&f.result))
+        .build()
+}
