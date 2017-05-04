@@ -149,3 +149,21 @@ fn mutation_json(m: &Mutation) -> Json {
         Mutation::CorruptMeta { index, field } => {
             let f = match field {
                 crate::mutate::MetaField::Nonce => "nonce",
+                crate::mutate::MetaField::Seq => "seq",
+                crate::mutate::MetaField::Role => "role",
+            };
+            b.set("index", Json::Num(*index as f64))
+                .set("field", Json::Str(f.to_string()))
+        }
+    };
+    b.set("describe", Json::Str(m.describe())).build()
+}
+
+fn plan_json(plan: &[Mutation]) -> Json {
+    Json::Arr(plan.iter().map(mutation_json).collect())
+}
+
+fn replay_json(r: &ReplayResult) -> Json {
+    let path: Vec<Json> = r
+        .path
+        .iter()
