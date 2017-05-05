@@ -203,3 +203,21 @@ fn finding_json(f: &Finding) -> Json {
         .set("divergence", replay_json(&f.result))
         .build()
 }
+
+/// Serialize a full fuzz report as a [`Json`] value.
+pub fn report_json(report: &FuzzReport) -> Json {
+    ObjBuilder::new()
+        .set("tool", Json::Str("noisescope".to_string()))
+        .set(
+            "disclaimer",
+            Json::Str("structural handshake analysis only; not a cryptographic proof".to_string()),
+        )
+        .set("protocol", Json::Str(report.protocol.clone()))
+        .set(
+            "baseline_conforming",
+            Json::Bool(report.baseline_conforming),
+        )
+        .set("baseline", replay_json(&report.baseline))
+        .set("trials", Json::Num(report.trials as f64))
+        .set("findings_count", Json::Num(report.findings.len() as f64))
+        .set(
