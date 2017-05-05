@@ -294,3 +294,21 @@ pub fn report_text(report: &FuzzReport) -> String {
     out.push_str(&format!("protocol: {}\n", report.protocol));
     out.push_str(&format!(
         "baseline conforming: {}\n",
+        if report.baseline_conforming {
+            "yes"
+        } else {
+            "no"
+        }
+    ));
+    out.push_str(&format!("trials: {}\n", report.trials));
+    out.push_str(&format!("findings: {}\n", report.findings.len()));
+    for (i, f) in report.findings.iter().enumerate() {
+        out.push_str(&format!("\n--- finding #{i} (seed {:#x}) ---\n", f.seed));
+        out.push_str(&format!(
+            "minimized plan ({} of {} mutations, {} evals):\n",
+            f.minimized.plan.len(),
+            f.minimized.original_len,
+            f.minimized.evaluations
+        ));
+        for m in &f.minimized.plan {
+            out.push_str(&format!("  - {}\n", m.describe()));
