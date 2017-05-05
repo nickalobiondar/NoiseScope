@@ -239,3 +239,22 @@ pub fn check_json(r: &ReplayResult) -> Json {
         .set("result", replay_json(r))
         .build()
 }
+
+// ---------------------------------------------------------------------------
+// Text rendering
+// ---------------------------------------------------------------------------
+
+/// Render a replay result as compact human text.
+pub fn replay_text(r: &ReplayResult) -> String {
+    let mut out = String::new();
+    out.push_str(&format!("protocol: {}\n", r.protocol));
+    out.push_str(&format!(
+        "final state: {} ({})\n",
+        r.final_state,
+        if r.reached_accepting {
+            "accepting"
+        } else {
+            "NOT accepting"
+        }
+    ));
+    out.push_str(&format!(
