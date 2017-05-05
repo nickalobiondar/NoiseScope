@@ -276,3 +276,21 @@ pub fn replay_text(r: &ReplayResult) -> String {
         for v in &r.violations {
             out.push_str(&format!(
                 "  [{}] @event {} state={}: {}\n",
+                v.kind.as_str(),
+                v.event_index,
+                v.state,
+                v.detail
+            ));
+        }
+    }
+    out
+}
+
+/// Render a full fuzz report as human text.
+pub fn report_text(report: &FuzzReport) -> String {
+    let mut out = String::new();
+    out.push_str("noisescope — divergence report\n");
+    out.push_str("(structural analysis only; not a cryptographic proof)\n");
+    out.push_str(&format!("protocol: {}\n", report.protocol));
+    out.push_str(&format!(
+        "baseline conforming: {}\n",
