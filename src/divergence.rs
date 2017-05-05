@@ -221,3 +221,21 @@ pub fn report_json(report: &FuzzReport) -> Json {
         .set("trials", Json::Num(report.trials as f64))
         .set("findings_count", Json::Num(report.findings.len() as f64))
         .set(
+            "findings",
+            Json::Arr(report.findings.iter().map(finding_json).collect()),
+        )
+        .build()
+}
+
+/// Serialize a single replay result as JSON (used by the `check` command).
+pub fn check_json(r: &ReplayResult) -> Json {
+    ObjBuilder::new()
+        .set("tool", Json::Str("noisescope".to_string()))
+        .set(
+            "disclaimer",
+            Json::Str("structural handshake analysis only; not a cryptographic proof".to_string()),
+        )
+        .set("protocol", Json::Str(r.protocol.clone()))
+        .set("result", replay_json(r))
+        .build()
+}
