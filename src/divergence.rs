@@ -312,3 +312,21 @@ pub fn report_text(report: &FuzzReport) -> String {
         ));
         for m in &f.minimized.plan {
             out.push_str(&format!("  - {}\n", m.describe()));
+        }
+        out.push_str("divergence:\n");
+        for line in replay_text(&f.result).lines() {
+            out.push_str(&format!("  {line}\n"));
+        }
+    }
+    out
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::model::{Event, ProtocolSpec, Transition};
+
+    fn spec() -> ProtocolSpec {
+        ProtocolSpec {
+            name: "p".into(),
+            roles: vec!["i".into(), "r".into()],
