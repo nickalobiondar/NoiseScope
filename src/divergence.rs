@@ -258,3 +258,21 @@ pub fn replay_text(r: &ReplayResult) -> String {
         }
     ));
     out.push_str(&format!(
+        "conforming: {}\n",
+        if r.is_conforming() { "yes" } else { "no" }
+    ));
+    if r.path.is_empty() {
+        out.push_str("path: (empty)\n");
+    } else {
+        out.push_str("path:\n");
+        for s in &r.path {
+            out.push_str(&format!("  {} --[{}]--> {}\n", s.from, s.event_label, s.to));
+        }
+    }
+    if r.violations.is_empty() {
+        out.push_str("violations: none\n");
+    } else {
+        out.push_str(&format!("violations ({}):\n", r.violations.len()));
+        for v in &r.violations {
+            out.push_str(&format!(
+                "  [{}] @event {} state={}: {}\n",
