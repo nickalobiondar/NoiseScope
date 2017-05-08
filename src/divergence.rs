@@ -330,3 +330,21 @@ mod tests {
         ProtocolSpec {
             name: "p".into(),
             roles: vec!["i".into(), "r".into()],
+            initial: "s0".into(),
+            accepting: vec!["s2".into()],
+            states: vec!["s0".into(), "s1".into(), "s2".into()],
+            transitions: vec![
+                Transition {
+                    from: "s0".into(),
+                    to: "s1".into(),
+                    role: "i".into(),
+                    msg: "e".into(),
+                    requires_fresh_nonce: true,
+                    requires_seq: false,
+                    note: None,
+                },
+                Transition {
+                    from: "s1".into(),
+                    to: "s2".into(),
+                    role: "r".into(),
+                    msg: "ee".into(),
