@@ -348,3 +348,22 @@ mod tests {
                     to: "s2".into(),
                     role: "r".into(),
                     msg: "ee".into(),
+                    requires_fresh_nonce: false,
+                    requires_seq: true,
+                    note: None,
+                },
+            ],
+            description: None,
+        }
+    }
+
+    fn good_transcript() -> Transcript {
+        let mut t = Transcript::new("p");
+        let mut a = Event::new("a", "i", "e");
+        a.nonce = Some(1);
+        let mut b = Event::new("b", "r", "ee");
+        b.seq = Some(0);
+        t.events.push(a);
+        t.events.push(b);
+        t
+    }
