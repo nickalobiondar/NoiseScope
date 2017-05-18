@@ -7,3 +7,8 @@
 //! sequence monotonicity). It replays observed *transcripts* against a *spec*,
 //! reports where they diverge, and can *fuzz* a conforming transcript with
 //! deterministic mutations (drop / duplicate / reorder / corrupt-metadata) to
+//! discover — and then **minimize** — the shortest mutation sequences that
+//! break conformance.
+//!
+//! ## What this is not
+//!
