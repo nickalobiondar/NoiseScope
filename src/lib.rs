@@ -12,3 +12,8 @@
 //!
 //! ## What this is not
 //!
+//! This is **not** a cryptographic proof tool. It does not evaluate secrecy,
+//! authentication, forward secrecy, or any computational/symbolic security
+//! property. It knows nothing about real key schedules, AEAD constructions, or
+//! wire formats. The bundled Noise/TLS/MLS-inspired fixtures are *abstract*
+//! teaching models and make **no claim of wire compatibility**.
