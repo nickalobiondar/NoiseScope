@@ -23,3 +23,8 @@
 //! machine accepts, and how small perturbations cause divergence.
 //!
 //! ## Module map
+//!
+//! * [`json`] — dependency-free JSON parse/serialize.
+//! * [`model`] — protocol spec + transcript data types.
+//! * [`parser`] — JSON → model.
+//! * [`engine`] — transcript replay + invariant checking.
