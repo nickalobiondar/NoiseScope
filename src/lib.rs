@@ -17,3 +17,9 @@
 //! property. It knows nothing about real key schedules, AEAD constructions, or
 //! wire formats. The bundled Noise/TLS/MLS-inspired fixtures are *abstract*
 //! teaching models and make **no claim of wire compatibility**.
+//!
+//! What it *does* give you is a fast, deterministic, dependency-free way to
+//! reason about the **shape** of a handshake: which message orders a state
+//! machine accepts, and how small perturbations cause divergence.
+//!
+//! ## Module map
