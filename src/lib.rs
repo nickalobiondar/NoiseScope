@@ -28,3 +28,8 @@
 //! * [`model`] — protocol spec + transcript data types.
 //! * [`parser`] — JSON → model.
 //! * [`engine`] — transcript replay + invariant checking.
+//! * [`mutate`] — deterministic mutation generation/application.
+//! * [`minimize`] — delta-debugging-style plan minimization.
+//! * [`divergence`] — fuzz orchestration + JSON/text reports.
+
+pub mod divergence;
