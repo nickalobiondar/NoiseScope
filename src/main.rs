@@ -1,0 +1,30 @@
+//! `noisescope` command-line interface.
+//!
+//! Subcommands:
+//!   lint    <spec.json>                      — check a spec for internal consistency
+//!   check   <spec.json> <transcript.json>    — replay a transcript, report divergence
+//!   fuzz    <spec.json> <transcript.json>    — mutate & minimize failing sequences
+//!   paths   <spec.json> <transcript.json>    — emit the handshake path (for the viewer)
+//!   version                                  — print version
+//!   help                                     — this message
+//!
+//! Global flags:
+//!   --format json|text   (default: text; `paths` always emits JSON)
+//!   --seed <u64>         (fuzz only; default 0x5EED)
+//!   --trials <n>         (fuzz only; default 256)
+//!   --max-plan-len <n>   (fuzz only; default 4)
+//!   --max-findings <n>   (fuzz only; default 8; 0 = unlimited within trials)
+//!   --out <path>         write output to a file instead of stdout
+//!
+//! Exit codes: 0 = success/conforming, 1 = divergence/violations found,
+//! 2 = usage or I/O error. This makes `noisescope` scriptable in CI.
+
+use std::process::ExitCode;
+
+use noisescope::divergence::{check_json, fuzz, replay_text, report_json, report_text, FuzzConfig};
+use noisescope::engine::replay;
+use noisescope::json::Json;
+use noisescope::parser::{parse_protocol, parse_transcript};
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+enum Format {
