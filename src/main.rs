@@ -28,3 +28,18 @@ use noisescope::parser::{parse_protocol, parse_transcript};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 enum Format {
+    Json,
+    Text,
+}
+
+struct Options {
+    format: Format,
+    seed: u64,
+    trials: usize,
+    max_plan_len: usize,
+    max_findings: usize,
+    out: Option<String>,
+    positional: Vec<String>,
+}
+
+fn parse_options(args: &[String]) -> Result<Options, String> {
