@@ -43,3 +43,18 @@ struct Options {
 }
 
 fn parse_options(args: &[String]) -> Result<Options, String> {
+    let mut opts = Options {
+        format: Format::Text,
+        seed: 0x5EED,
+        trials: 256,
+        max_plan_len: 4,
+        max_findings: 8,
+        out: None,
+        positional: Vec::new(),
+    };
+    let mut i = 0;
+    while i < args.len() {
+        let a = &args[i];
+        match a.as_str() {
+            "--format" => {
+                i += 1;
