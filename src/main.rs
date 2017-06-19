@@ -58,3 +58,19 @@ fn parse_options(args: &[String]) -> Result<Options, String> {
         match a.as_str() {
             "--format" => {
                 i += 1;
+                let v = args.get(i).ok_or("--format requires a value")?;
+                opts.format = match v.as_str() {
+                    "json" => Format::Json,
+                    "text" => Format::Text,
+                    other => return Err(format!("unknown format `{other}`")),
+                };
+            }
+            "--seed" => {
+                i += 1;
+                let v = args.get(i).ok_or("--seed requires a value")?;
+                opts.seed = parse_u64(v)?;
+            }
+            "--trials" => {
+                i += 1;
+                let v = args.get(i).ok_or("--trials requires a value")?;
+                opts.trials = parse_usize(v)?;
