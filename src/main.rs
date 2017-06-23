@@ -89,3 +89,19 @@ fn parse_options(args: &[String]) -> Result<Options, String> {
                 i += 1;
                 let v = args.get(i).ok_or("--out requires a value")?;
                 opts.out = Some(v.clone());
+            }
+            other if other.starts_with("--") => {
+                return Err(format!("unknown flag `{other}`"));
+            }
+            _ => opts.positional.push(a.clone()),
+        }
+        i += 1;
+    }
+    Ok(opts)
+}
+
+fn parse_u64(s: &str) -> Result<u64, String> {
+    let s = s.trim();
+    let parsed = if let Some(hex) = s.strip_prefix("0x") {
+        u64::from_str_radix(hex, 16)
+    } else {
