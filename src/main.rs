@@ -74,3 +74,18 @@ fn parse_options(args: &[String]) -> Result<Options, String> {
                 i += 1;
                 let v = args.get(i).ok_or("--trials requires a value")?;
                 opts.trials = parse_usize(v)?;
+            }
+            "--max-plan-len" => {
+                i += 1;
+                let v = args.get(i).ok_or("--max-plan-len requires a value")?;
+                opts.max_plan_len = parse_usize(v)?.max(1);
+            }
+            "--max-findings" => {
+                i += 1;
+                let v = args.get(i).ok_or("--max-findings requires a value")?;
+                opts.max_findings = parse_usize(v)?;
+            }
+            "--out" => {
+                i += 1;
+                let v = args.get(i).ok_or("--out requires a value")?;
+                opts.out = Some(v.clone());
