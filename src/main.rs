@@ -105,3 +105,18 @@ fn parse_u64(s: &str) -> Result<u64, String> {
     let parsed = if let Some(hex) = s.strip_prefix("0x") {
         u64::from_str_radix(hex, 16)
     } else {
+        s.parse::<u64>()
+    };
+    parsed.map_err(|_| format!("invalid unsigned integer `{s}`"))
+}
+
+fn parse_usize(s: &str) -> Result<usize, String> {
+    s.trim()
+        .parse::<usize>()
+        .map_err(|_| format!("invalid count `{s}`"))
+}
+
+fn read_file(path: &str) -> Result<String, String> {
+    std::fs::read_to_string(path).map_err(|e| format!("cannot read `{path}`: {e}"))
+}
+
