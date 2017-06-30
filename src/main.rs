@@ -120,3 +120,19 @@ fn read_file(path: &str) -> Result<String, String> {
     std::fs::read_to_string(path).map_err(|e| format!("cannot read `{path}`: {e}"))
 }
 
+fn emit(opts: &Options, s: &str) -> Result<(), String> {
+    match &opts.out {
+        Some(path) => std::fs::write(path, s).map_err(|e| format!("cannot write `{path}`: {e}")),
+        None => {
+            print!("{s}");
+            if !s.ends_with('\n') {
+                println!();
+            }
+            Ok(())
+        }
+    }
+}
+
+const HELP: &str = "\
+noisescope — cryptographic handshake transcript state-machine analyzer/fuzzer
+(structural analysis only; NOT a cryptographic proof tool)
