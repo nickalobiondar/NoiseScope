@@ -136,3 +136,18 @@ fn emit(opts: &Options, s: &str) -> Result<(), String> {
 const HELP: &str = "\
 noisescope — cryptographic handshake transcript state-machine analyzer/fuzzer
 (structural analysis only; NOT a cryptographic proof tool)
+
+USAGE:
+  noisescope <command> [args] [flags]
+
+COMMANDS:
+  lint    <spec.json>                     check a spec for internal consistency
+  check   <spec.json> <transcript.json>   replay a transcript, report divergence
+  fuzz    <spec.json> <transcript.json>   mutate & minimize failing sequences
+  paths   <spec.json> <transcript.json>   emit handshake path JSON (for the viewer)
+  version                                 print version
+  help                                    show this message
+
+FLAGS:
+  --format json|text    output format (default: text; `paths` is always JSON)
+  --seed <u64>          fuzz PRNG seed (default: 0x5EED)
