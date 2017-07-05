@@ -197,3 +197,19 @@ fn run() -> Result<i32, String> {
                     &opts,
                     &format!("spec `{}` is internally consistent\n", spec.name),
                 )?;
+            } else {
+                let mut s = format!("spec `{}` has {} problem(s):\n", spec.name, problems.len());
+                for p in &problems {
+                    s.push_str(&format!("  - {p}\n"));
+                }
+                emit(&opts, &s)?;
+            }
+            Ok(if problems.is_empty() { 0 } else { 1 })
+        }
+        "check" => {
+            let (spec, transcript) = load_pair(&opts)?;
+            let result = replay(&spec, &transcript);
+            if opts.format == Format::Json {
+                emit(&opts, &check_json(&result).to_pretty())?;
+            } else {
+                emit(&opts, &replay_text(&result))?;
