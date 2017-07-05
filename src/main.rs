@@ -213,3 +213,18 @@ fn run() -> Result<i32, String> {
                 emit(&opts, &check_json(&result).to_pretty())?;
             } else {
                 emit(&opts, &replay_text(&result))?;
+            }
+            Ok(if result.is_conforming() { 0 } else { 1 })
+        }
+        "fuzz" => {
+            let (spec, transcript) = load_pair(&opts)?;
+            let cfg = FuzzConfig {
+                seed: opts.seed,
+                trials: opts.trials,
+                max_plan_len: opts.max_plan_len,
+                max_findings: opts.max_findings,
+            };
+            let report = fuzz(&spec, &transcript, &cfg);
+            if opts.format == Format::Json {
+                emit(&opts, &report_json(&report).to_pretty())?;
+            } else {
