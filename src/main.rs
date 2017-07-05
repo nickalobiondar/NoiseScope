@@ -166,3 +166,19 @@ fn run() -> Result<i32, String> {
     let raw: Vec<String> = std::env::args().skip(1).collect();
     if raw.is_empty() {
         print!("{HELP}");
+        return Ok(2);
+    }
+    let command = raw[0].clone();
+    let opts = parse_options(&raw[1..])?;
+
+    match command.as_str() {
+        "help" | "-h" | "--help" => {
+            print!("{HELP}");
+            Ok(0)
+        }
+        "version" | "-V" | "--version" => {
+            println!("noisescope {}", noisescope::VERSION);
+            Ok(0)
+        }
+        "lint" => {
+            let path = opts.positional.first().ok_or("lint requires <spec.json>")?;
