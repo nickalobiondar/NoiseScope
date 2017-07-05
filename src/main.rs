@@ -182,3 +182,18 @@ fn run() -> Result<i32, String> {
         }
         "lint" => {
             let path = opts.positional.first().ok_or("lint requires <spec.json>")?;
+            let spec = parse_protocol(&read_file(path)?).map_err(|e| e.to_string())?;
+            let problems = spec.lint();
+            if opts.format == Format::Json {
+                let arr = Json::Arr(problems.iter().cloned().map(Json::Str).collect());
+                let obj = noisescope::json::ObjBuilder::new()
+                    .set("spec", Json::Str(spec.name.clone()))
+                    .set("ok", Json::Bool(problems.is_empty()))
+                    .set("problems", arr)
+                    .build();
+                emit(&opts, &obj.to_pretty())?;
+            } else if problems.is_empty() {
+                emit(
+                    &opts,
+                    &format!("spec `{}` is internally consistent\n", spec.name),
+                )?;
