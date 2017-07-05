@@ -151,3 +151,18 @@ COMMANDS:
 FLAGS:
   --format json|text    output format (default: text; `paths` is always JSON)
   --seed <u64>          fuzz PRNG seed (default: 0x5EED)
+  --trials <n>          fuzz trial budget (default: 256)
+  --max-plan-len <n>    max mutations per plan (default: 4)
+  --max-findings <n>    stop after n findings (default: 8; 0 = unlimited)
+  --out <path>          write output to a file instead of stdout
+
+EXIT CODES:
+  0  success / conforming
+  1  divergence or violations found
+  2  usage or I/O error
+";
+
+fn run() -> Result<i32, String> {
+    let raw: Vec<String> = std::env::args().skip(1).collect();
+    if raw.is_empty() {
+        print!("{HELP}");
