@@ -244,3 +244,18 @@ fn run() -> Result<i32, String> {
                         .set("event_index", Json::Num(s.event_index as f64))
                         .set("event", Json::Str(s.event_label.clone()))
                         .set("from", Json::Str(s.from.clone()))
+                        .set("to", Json::Str(s.to.clone()))
+                        .build()
+                })
+                .collect();
+            let states: Vec<Json> = spec.states.iter().cloned().map(Json::Str).collect();
+            let doc = noisescope::json::ObjBuilder::new()
+                .set("protocol", Json::Str(spec.name.clone()))
+                .set("initial", Json::Str(spec.initial.clone()))
+                .set(
+                    "accepting",
+                    Json::Arr(spec.accepting.iter().cloned().map(Json::Str).collect()),
+                )
+                .set("states", Json::Arr(states))
+                .set("final_state", Json::Str(result.final_state.clone()))
+                .set("reached_accepting", Json::Bool(result.reached_accepting))
