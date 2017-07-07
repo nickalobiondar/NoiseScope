@@ -228,3 +228,19 @@ fn run() -> Result<i32, String> {
             if opts.format == Format::Json {
                 emit(&opts, &report_json(&report).to_pretty())?;
             } else {
+                emit(&opts, &report_text(&report))?;
+            }
+            Ok(if report.findings.is_empty() { 0 } else { 1 })
+        }
+        "paths" => {
+            let (spec, transcript) = load_pair(&opts)?;
+            let result = replay(&spec, &transcript);
+            // `paths` emits a viewer-friendly JSON document (always JSON).
+            let steps: Vec<Json> = result
+                .path
+                .iter()
+                .map(|s| {
+                    noisescope::json::ObjBuilder::new()
+                        .set("event_index", Json::Num(s.event_index as f64))
+                        .set("event", Json::Str(s.event_label.clone()))
+                        .set("from", Json::Str(s.from.clone()))
