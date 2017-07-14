@@ -1,2 +1,7 @@
 {
   "name": "noisescope-viewer",
+  "version": "0.1.0",
+  "description": "Renders noisescope handshake path JSON as an ASCII/SVG diagram. Structural visualization only; not a cryptographic proof tool.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
