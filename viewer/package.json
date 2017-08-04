@@ -5,3 +5,8 @@
   "license": "MIT",
   "type": "module",
   "bin": {
+    "noisescope-viewer": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "node --test dist/render.test.js",
