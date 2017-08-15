@@ -29,3 +29,16 @@ function main(argv: string[]): number {
     if (a === "--svg") svg = true;
     else if (a === "--help" || a === "-h") {
       process.stdout.write(
+        "noisescope-viewer [--svg] [path.json]\n" +
+          "Renders `noisescope paths` output as ASCII or SVG.\n" +
+          "(structural visualization only; not a cryptographic proof tool)\n",
+      );
+      return 0;
+    } else if (!a.startsWith("--")) file = a;
+    else {
+      process.stderr.write(`unknown flag: ${a}\n`);
+      return 2;
+    }
+  }
+
+  const raw = file ? readFileSync(file, "utf8") : readStdin();
