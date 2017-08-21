@@ -33,3 +33,16 @@ test("isPathDoc accepts valid docs", () => {
 
 test("isPathDoc rejects garbage", () => {
   assert.equal(isPathDoc({ protocol: 1 }), false);
+  assert.equal(isPathDoc(null), false);
+  assert.equal(isPathDoc("nope"), false);
+});
+
+test("parsePathDoc round-trips JSON", () => {
+  const doc = parsePathDoc(JSON.stringify(sample));
+  assert.equal(doc.protocol, "noise-XX-abstract");
+  assert.equal(doc.path.length, 3);
+});
+
+test("parsePathDoc throws on invalid", () => {
+  assert.throws(() => parsePathDoc("{}"));
+});
