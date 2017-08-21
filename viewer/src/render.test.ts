@@ -46,3 +46,16 @@ test("parsePathDoc round-trips JSON", () => {
 test("parsePathDoc throws on invalid", () => {
   assert.throws(() => parsePathDoc("{}"));
 });
+
+test("renderAscii marks accepting state with double parens", () => {
+  const out = renderAscii(sample);
+  assert.match(out, /\(\(established\)\)/);
+  assert.match(out, /initiator:e#1001/);
+});
+
+test("renderAscii handles empty path", () => {
+  const empty: PathDoc = { ...sample, path: [], final_state: "await_e", reached_accepting: false };
+  const out = renderAscii(empty);
+  assert.match(out, /no transitions taken/);
+});
+
