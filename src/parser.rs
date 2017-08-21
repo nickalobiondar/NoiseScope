@@ -206,3 +206,36 @@ mod tests {
         let spec = parse_protocol(src).unwrap();
         assert_eq!(spec.name, "demo");
         assert_eq!(spec.transitions.len(), 1);
+        assert!(spec.transitions[0].requires_fresh_nonce);
+    }
+
+    #[test]
+    fn parse_transcript_basic() {
+        let src = r#"{
+            "protocol": "demo",
+            "events": [
+                {"role": "i", "msg": "e", "nonce": 7, "meta": {"cipher": "aead"}}
+            ]
+        }"#;
+        let t = parse_transcript(src).unwrap();
+        assert_eq!(t.events.len(), 1);
+        assert_eq!(t.events[0].nonce, Some(7));
+        assert_eq!(
+            t.events[0].meta.get("cipher").map(String::as_str),
+            Some("aead")
+        );
+        assert_eq!(t.events[0].id, "e0");
+    }
+
+    #[test]
+    fn missing_field_errors() {
+        assert!(parse_protocol(r#"{"name":"x"}"#).is_err());
+    }
+
+    #[test]
+    fn meta_number_coerced() {
+        let src = r#"{"protocol":"d","events":[{"role":"i","msg":"e","meta":{"len":16}}]}"#;
+        let t = parse_transcript(src).unwrap();
+        assert_eq!(t.events[0].meta.get("len").map(String::as_str), Some("16"));
+    }
+// review note: parser must reject partial frames
