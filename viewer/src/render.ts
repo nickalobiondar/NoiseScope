@@ -32,3 +32,19 @@ export function isPathDoc(value: unknown): value is PathDoc {
   if (typeof value !== "object" || value === null) return false;
   const v = value as Record<string, unknown>;
   return (
+    typeof v.protocol === "string" &&
+    typeof v.initial === "string" &&
+    Array.isArray(v.accepting) &&
+    Array.isArray(v.states) &&
+    typeof v.final_state === "string" &&
+    typeof v.reached_accepting === "boolean" &&
+    Array.isArray(v.path)
+  );
+}
+
+/** Parse a JSON string into a validated {@link PathDoc}. Throws on mismatch. */
+export function parsePathDoc(json: string): PathDoc {
+  const parsed: unknown = JSON.parse(json);
+  if (!isPathDoc(parsed)) {
+    throw new Error("input is not a valid noisescope path document");
+  }
