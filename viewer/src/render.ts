@@ -15,3 +15,20 @@ export interface PathStep {
   from: string;
   to: string;
 }
+
+/** The full path document produced by `noisescope paths`. */
+export interface PathDoc {
+  protocol: string;
+  initial: string;
+  accepting: string[];
+  states: string[];
+  final_state: string;
+  reached_accepting: boolean;
+  path: PathStep[];
+}
+
+/** Type guard that validates an unknown value is a {@link PathDoc}. */
+export function isPathDoc(value: unknown): value is PathDoc {
+  if (typeof value !== "object" || value === null) return false;
+  const v = value as Record<string, unknown>;
+  return (
