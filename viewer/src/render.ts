@@ -48,3 +48,19 @@ export function parsePathDoc(json: string): PathDoc {
   if (!isPathDoc(parsed)) {
     throw new Error("input is not a valid noisescope path document");
   }
+  return parsed;
+}
+
+/**
+ * Render an ASCII diagram of the handshake path.
+ *
+ * Example:
+ *   noise-XX-abstract  [reached: established ✓]
+ *   (await_e)
+ *     └─ initiator:e#1001 ─▶ (await_ee)
+ *     └─ responder:e_ee_s_es#2002 ─▶ (await_se)
+ *     └─ initiator:s_se ─▶ ((established))
+ */
+export function renderAscii(doc: PathDoc): string {
+  const lines: string[] = [];
+  const mark = doc.reached_accepting ? "\u2713" : "\u2717";
