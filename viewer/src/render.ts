@@ -64,3 +64,20 @@ export function parsePathDoc(json: string): PathDoc {
 export function renderAscii(doc: PathDoc): string {
   const lines: string[] = [];
   const mark = doc.reached_accepting ? "\u2713" : "\u2717";
+  lines.push(`${doc.protocol}  [final: ${doc.final_state} ${mark}]`);
+  lines.push(wrapState(doc.initial, doc.accepting));
+  for (const step of doc.path) {
+    const target = wrapState(step.to, doc.accepting);
+    lines.push(`  \u2514\u2500 ${step.event} \u2500\u25B6 ${target}`);
+  }
+  if (doc.path.length === 0) {
+    lines.push("  (no transitions taken)");
+  }
+  return lines.join("\n");
+}
+
+function wrapState(state: string, accepting: string[]): string {
+  return accepting.includes(state) ? `((${state}))` : `(${state})`;
+}
+
+/** Layout constants for SVG rendering. */
