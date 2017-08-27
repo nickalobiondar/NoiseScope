@@ -130,3 +130,19 @@ export function renderSvg(doc: PathDoc): string {
     // Animated pulse dot travelling down the edge.
     const dur = 2.4;
     const begin = (i * 0.5).toFixed(2);
+    parts.push(
+      `<circle r="4" fill="#8ab4f8"><animate attributeName="cy" from="${y1}" to="${y2}" dur="${dur}s" begin="${begin}s" repeatCount="indefinite"/><animate attributeName="cx" values="${cx};${cx}" dur="${dur}s" begin="${begin}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="${dur}s" begin="${begin}s" repeatCount="indefinite"/></circle>`,
+    );
+    // Edge label.
+    const midY = (y1 + y2) / 2 + 4;
+    parts.push(
+      `<text x="${cx + 14}" y="${midY}" fill="#c9d1d9" font-family="monospace" font-size="11">${escapeXml(doc.path[i].event)}</text>`,
+    );
+  }
+
+  // Nodes.
+  for (let i = 0; i < nodes.length; i++) {
+    const y = nodeY(i);
+    const x = cx - SVG.nodeW / 2;
+    const accepting = doc.accepting.includes(nodes[i]);
+    const fill = accepting ? "#132e1a" : "#111a2e";
