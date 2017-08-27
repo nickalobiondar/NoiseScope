@@ -97,3 +97,19 @@ const SVG = {
 export function renderSvg(doc: PathDoc): string {
   const nodes = [doc.initial, ...doc.path.map((s) => s.to)];
   const height =
+    SVG.marginTop + nodes.length * SVG.gapY + SVG.marginTop / 2;
+  const cx = SVG.width / 2;
+
+  const parts: string[] = [];
+  parts.push(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${SVG.width}" height="${height}" viewBox="0 0 ${SVG.width} ${height}" role="img" aria-label="Handshake path for ${escapeXml(doc.protocol)}">`,
+  );
+  parts.push(`<title>${escapeXml(doc.protocol)} handshake path</title>`);
+  parts.push(defs());
+  parts.push(
+    `<rect width="${SVG.width}" height="${height}" fill="#0b1020"/>`,
+  );
+  parts.push(
+    `<text x="${cx}" y="34" fill="#8ab4f8" font-family="monospace" font-size="16" text-anchor="middle">${escapeXml(doc.protocol)}</text>`,
+  );
+  const status = doc.reached_accepting ? "reached accepting" : "did NOT accept";
