@@ -81,3 +81,19 @@ function wrapState(state: string, accepting: string[]): string {
 }
 
 /** Layout constants for SVG rendering. */
+const SVG = {
+  nodeW: 150,
+  nodeH: 40,
+  gapY: 78,
+  marginX: 40,
+  marginTop: 70,
+  width: 460,
+};
+
+/**
+ * Render a standalone, self-contained SVG diagram of the handshake path with a
+ * subtle animated "pulse" travelling along the accepted edges.
+ */
+export function renderSvg(doc: PathDoc): string {
+  const nodes = [doc.initial, ...doc.path.map((s) => s.to)];
+  const height =
