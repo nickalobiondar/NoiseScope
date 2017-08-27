@@ -113,3 +113,20 @@ export function renderSvg(doc: PathDoc): string {
     `<text x="${cx}" y="34" fill="#8ab4f8" font-family="monospace" font-size="16" text-anchor="middle">${escapeXml(doc.protocol)}</text>`,
   );
   const status = doc.reached_accepting ? "reached accepting" : "did NOT accept";
+  const statusColor = doc.reached_accepting ? "#7ee787" : "#ff7b72";
+  parts.push(
+    `<text x="${cx}" y="52" fill="${statusColor}" font-family="monospace" font-size="11" text-anchor="middle">${escapeXml(doc.final_state)} — ${status}</text>`,
+  );
+
+  const nodeY = (i: number): number => SVG.marginTop + i * SVG.gapY;
+
+  // Edges first (so nodes render on top).
+  for (let i = 0; i < doc.path.length; i++) {
+    const y1 = nodeY(i) + SVG.nodeH;
+    const y2 = nodeY(i + 1);
+    parts.push(
+      `<line x1="${cx}" y1="${y1}" x2="${cx}" y2="${y2}" stroke="#30475e" stroke-width="2" marker-end="url(#arrow)"/>`,
+    );
+    // Animated pulse dot travelling down the edge.
+    const dur = 2.4;
+    const begin = (i * 0.5).toFixed(2);
