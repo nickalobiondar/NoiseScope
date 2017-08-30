@@ -4,3 +4,8 @@
     "module": "ES2020",
     "moduleResolution": "node",
     "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
