@@ -25,3 +25,18 @@ fn spec(name: &str) -> noisescope::model::ProtocolSpec {
 fn transcript(name: &str) -> noisescope::model::Transcript {
     parse_transcript(&fixture(name)).expect("transcript parses")
 }
+
+#[test]
+fn all_specs_lint_clean() {
+    for s in ["noise-xx", "tls13", "mls"] {
+        let spec = spec(&format!("{s}.protocol.json"));
+        let problems = spec.lint();
+        assert!(problems.is_empty(), "{s} lint problems: {problems:?}");
+    }
+}
+
+#[test]
+fn ok_transcripts_conform() {
+    for s in ["noise-xx", "tls13", "mls"] {
+        let sp = spec(&format!("{s}.protocol.json"));
+        let tr = transcript(&format!("{s}.ok.transcript.json"));
