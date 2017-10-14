@@ -40,3 +40,19 @@ fn ok_transcripts_conform() {
     for s in ["noise-xx", "tls13", "mls"] {
         let sp = spec(&format!("{s}.protocol.json"));
         let tr = transcript(&format!("{s}.ok.transcript.json"));
+        let r = replay(&sp, &tr);
+        assert!(
+            r.is_conforming(),
+            "{s} ok transcript did not conform: {:?}",
+            r.violations
+        );
+    }
+}
+
+#[test]
+fn noise_replay_flags_nonce() {
+    let sp = spec("noise-xx.protocol.json");
+    let tr = transcript("noise-xx.replay.transcript.json");
+    let r = replay(&sp, &tr);
+    assert!(r
+        .violations
