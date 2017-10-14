@@ -56,3 +56,19 @@ fn noise_replay_flags_nonce() {
     let r = replay(&sp, &tr);
     assert!(r
         .violations
+        .iter()
+        .any(|v| v.kind == ViolationKind::NonceReplay));
+}
+
+#[test]
+fn tls_reorder_flags_unexpected_message() {
+    let sp = spec("tls13.protocol.json");
+    let tr = transcript("tls13.reorder.transcript.json");
+    let r = replay(&sp, &tr);
+    assert!(!r.is_conforming());
+    assert!(r
+        .violations
+        .iter()
+        .any(|v| v.kind == ViolationKind::UnexpectedMessage));
+}
+
