@@ -72,3 +72,19 @@ fn tls_reorder_flags_unexpected_message() {
         .any(|v| v.kind == ViolationKind::UnexpectedMessage));
 }
 
+#[test]
+fn fuzzing_is_deterministic_and_minimal() {
+    let sp = spec("noise-xx.protocol.json");
+    let tr = transcript("noise-xx.ok.transcript.json");
+    let cfg = FuzzConfig {
+        seed: 0x5EED,
+        trials: 200,
+        max_plan_len: 4,
+        max_findings: 4,
+    };
+    let a = fuzz(&sp, &tr, &cfg);
+    let b = fuzz(&sp, &tr, &cfg);
+
+    // Determinism: identical config -> identical JSON report.
+    assert_eq!(report_json(&a).to_pretty(), report_json(&b).to_pretty());
+
