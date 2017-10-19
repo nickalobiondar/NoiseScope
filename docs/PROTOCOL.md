@@ -17,3 +17,16 @@ Both documents are UTF-8 JSON. As a convenience, `//` line comments are accepted
 by the parser (a non-standard extension used only in fixtures). An optional
 `"kind"` field (`"protocol"` or `"transcript"`) may be present for readability;
 it is not required, since the two kinds are distinguished structurally.
+
+---
+
+## 2. Protocol specification
+
+A protocol specification is a finite state machine plus per-transition metadata
+requirements.
+
+### 2.1 Fields
+
+| Field          | Type              | Required | Meaning                                             |
+|----------------|-------------------|----------|-----------------------------------------------------|
+| `name`         | string            | yes      | Unique spec identifier.                             |
