@@ -67,3 +67,16 @@ requirements.
 }
 ```
 
+### 2.4 Spec linting
+
+`noisescope lint spec.json` reports internal inconsistencies **without** any
+transcript: an undeclared `initial`/`accepting` state, transitions referencing
+unknown states, or transitions using undeclared roles. A clean spec exits `0`.
+
+---
+
+## 3. Transcript
+
+A transcript is an ordered list of observed events.
+
+### 3.1 Fields
