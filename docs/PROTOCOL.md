@@ -92,3 +92,16 @@ A transcript is an ordered list of observed events.
 |---------|-----------------------|----------|-----------------------------------------------------|
 | `id`    | string                | no       | Stable id (defaults to `e{index}`).                 |
 | `role`  | string                | yes      | Sender role.                                        |
+| `msg`   | string                | yes      | Message-type label.                                 |
+| `nonce` | number (uint)         | no       | Freshness token (plain integer, **not** a key).     |
+| `seq`   | number (uint)         | no       | Per-role sequence counter.                          |
+| `meta`  | object<string,scalar> | no       | Free-form metadata; scalars are coerced to strings. |
+
+### 3.3 Example
+
+```json
+{
+  "kind": "transcript",
+  "protocol": "noise-XX-abstract",
+  "events": [
+    {"id": "m1", "role": "initiator", "msg": "e",         "nonce": 1001},
