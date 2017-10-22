@@ -55,3 +55,15 @@ requirements.
 {
   "kind": "protocol",
   "name": "noise-XX-abstract",
+  "roles": ["initiator", "responder"],
+  "initial": "await_e",
+  "states": ["await_e", "await_ee", "await_se", "established"],
+  "accepting": ["established"],
+  "transitions": [
+    {"from": "await_e",  "to": "await_ee", "role": "initiator", "msg": "e",         "requires_fresh_nonce": true},
+    {"from": "await_ee", "to": "await_se", "role": "responder", "msg": "e_ee_s_es", "requires_fresh_nonce": true, "requires_seq": true},
+    {"from": "await_se", "to": "established", "role": "initiator", "msg": "s_se",    "requires_seq": true}
+  ]
+}
+```
+
