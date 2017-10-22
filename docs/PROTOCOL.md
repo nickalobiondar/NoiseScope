@@ -80,3 +80,15 @@ unknown states, or transitions using undeclared roles. A clean spec exits `0`.
 A transcript is an ordered list of observed events.
 
 ### 3.1 Fields
+
+| Field      | Type                | Required | Meaning                                        |
+|------------|---------------------|----------|------------------------------------------------|
+| `protocol` | string              | yes      | Name of the spec this transcript targets.      |
+| `events`   | Event[]             | yes      | Ordered events.                                |
+
+### 3.2 Event
+
+| Field   | Type                  | Required | Meaning                                             |
+|---------|-----------------------|----------|-----------------------------------------------------|
+| `id`    | string                | no       | Stable id (defaults to `e{index}`).                 |
+| `role`  | string                | yes      | Sender role.                                        |
