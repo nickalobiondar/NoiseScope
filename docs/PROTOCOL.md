@@ -42,3 +42,16 @@ requirements.
 | Field                  | Type    | Required | Default | Meaning                                                       |
 |------------------------|---------|----------|---------|---------------------------------------------------------------|
 | `from`                 | string  | yes      | —       | Source state.                                                 |
+| `to`                   | string  | yes      | —       | Target state.                                                 |
+| `role`                 | string  | yes      | —       | Role expected to send this message.                           |
+| `msg`                  | string  | yes      | —       | Message-type label triggering the transition.                 |
+| `requires_fresh_nonce` | boolean | no       | `false` | Event must carry a nonce **not seen before** in this run.     |
+| `requires_seq`         | boolean | no       | `false` | Event must carry `seq == previous_seq_for_role + 1` (from 0). |
+| `note`                 | string  | no       | —       | Human note.                                                   |
+
+### 2.3 Example
+
+```json
+{
+  "kind": "protocol",
+  "name": "noise-XX-abstract",
