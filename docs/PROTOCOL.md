@@ -30,3 +30,15 @@ requirements.
 | Field          | Type              | Required | Meaning                                             |
 |----------------|-------------------|----------|-----------------------------------------------------|
 | `name`         | string            | yes      | Unique spec identifier.                             |
+| `description`  | string            | no       | Human notes (surfaced in reports).                  |
+| `roles`        | string[]          | yes      | Declared participant roles.                         |
+| `initial`      | string            | yes      | Starting state; must appear in `states`.            |
+| `states`       | string[]          | yes      | All state names.                                    |
+| `accepting`    | string[]          | yes      | Terminal/accepting states; each must be in `states`.|
+| `transitions`  | Transition[]      | yes      | The edges of the machine (see below).               |
+
+### 2.2 Transition
+
+| Field                  | Type    | Required | Default | Meaning                                                       |
+|------------------------|---------|----------|---------|---------------------------------------------------------------|
+| `from`                 | string  | yes      | —       | Source state.                                                 |
