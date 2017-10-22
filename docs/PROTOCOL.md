@@ -105,3 +105,15 @@ A transcript is an ordered list of observed events.
   "protocol": "noise-XX-abstract",
   "events": [
     {"id": "m1", "role": "initiator", "msg": "e",         "nonce": 1001},
+    {"id": "m2", "role": "responder", "msg": "e_ee_s_es", "nonce": 2002, "seq": 0},
+    {"id": "m3", "role": "initiator", "msg": "s_se",      "seq": 0}
+  ]
+}
+```
+
+---
+
+## 4. Replay semantics & invariants
+
+The engine walks events in order from `initial`. For each event it looks up
+transitions matching `(current_state, role, msg)`:
