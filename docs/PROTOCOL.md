@@ -117,3 +117,16 @@ A transcript is an ordered list of observed events.
 
 The engine walks events in order from `initial`. For each event it looks up
 transitions matching `(current_state, role, msg)`:
+
+1. **Order** — if **no** transition matches the `msg` from the current state,
+   the event is an `unexpected_message`.
+2. **Role** — if a transition exists for that `msg` from the current state but
+   only for a *different* role, it is a `role_mismatch`.
+3. **Nonce** — when the chosen transition has `requires_fresh_nonce`, the event
+   must carry a `nonce` that has not been observed before in this run;
+   otherwise `nonce_replay` (missing nonce is also a `nonce_replay`).
+4. **Sequence** — when the chosen transition has `requires_seq`, the event's
+   `seq` must equal the previous sequence value for **that role** plus one, with
+   the first sequenced event for a role expected to be `0`; otherwise
+   `sequence_violation`.
+
