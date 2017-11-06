@@ -130,3 +130,15 @@ transitions matching `(current_state, role, msg)`:
    the first sequenced event for a role expected to be `0`; otherwise
    `sequence_violation`.
 
+After the walk, if the final state is not in `accepting`, a `not_accepting`
+violation is added.
+
+### 4.1 Fail-soft walking
+
+On `unexpected_message` / `role_mismatch` the engine does **not** advance the
+state (the offending event is skipped) so later events can still be evaluated.
+Nonce/sequence problems are metadata faults layered on an otherwise valid step,
+so the state still advances. This produces richer, deterministic reports.
+
+### 4.2 Per-role sequence counters
+
