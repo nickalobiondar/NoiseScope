@@ -142,3 +142,16 @@ so the state still advances. This produces richer, deterministic reports.
 
 ### 4.2 Per-role sequence counters
 
+`seq` is tracked independently per role. In the Noise example above, the
+`initiator`'s first *sequenced* message is `s_se`, so its `seq` is `0` even
+though it is the third event overall.
+
+---
+
+## 5. Mutations
+
+`noisescope fuzz` applies deterministic mutations to a baseline transcript:
+
+| Mutation       | Effect                                                        |
+|----------------|---------------------------------------------------------------|
+| `drop`         | Removes an event (message lost in flight).                    |
