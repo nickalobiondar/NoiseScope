@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="360" viewBox="0 0 760 360" role="img" aria-labelledby="dvTitle dvDesc" font-family="'JetBrains Mono', Consolas, monospace">
+  <title id="dvTitle">noisescope divergence instrument</title>
+  <desc id="dvDesc">An instrument panel comparing two handshake traces. The green line is a conforming baseline; the amber line is the same transcript after a minimized mutation. Where they part, a red marker sits at the divergence point. This is structural analysis, not a cryptographic proof.</desc>
+
+  <rect width="760" height="360" fill="#0b1220"/>
