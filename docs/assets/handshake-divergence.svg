@@ -11,3 +11,10 @@
     <line x1="60" y1="185" x2="720" y2="185" stroke-dasharray="3,7" stroke="#16223a"/>
     <line x1="200" y1="70" x2="200" y2="300" stroke="#12203a"/>
     <line x1="340" y1="70" x2="340" y2="300" stroke="#12203a"/>
+    <line x1="480" y1="70" x2="480" y2="300" stroke="#12203a"/>
+    <line x1="620" y1="70" x2="620" y2="300" stroke="#12203a"/>
+  </g>
+
+  <!-- event tick labels -->
+  <g fill="#5d708f" font-size="10" text-anchor="middle">
+    <text x="60" y="316">e0</text>
