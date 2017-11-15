@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="320" viewBox="0 0 760 320" role="img" aria-labelledby="csTitle csDesc" font-family="'JetBrains Mono', Consolas, monospace">
+  <title id="csTitle">noisescope handshake state machine</title>
+  <desc id="csDesc">The noise-XX abstract state machine drawn as four states connected by transitions. A pulse walks the legal path from await_e to established as a conforming transcript is replayed. Structural only, not a cryptographic claim.</desc>
+
