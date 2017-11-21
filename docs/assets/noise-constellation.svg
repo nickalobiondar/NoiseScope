@@ -10,3 +10,11 @@
     <line x1="320" y1="120" x2="500" y2="210"/>
     <line x1="500" y1="210" x2="660" y2="150"/>
   </g>
+
+  <!-- edge labels: the abstract messages -->
+  <g fill="#8697b3" font-size="10.5" text-anchor="middle">
+    <text x="230" y="140">initiator:e</text>
+    <text x="410" y="180">responder:e_ee_s_es</text>
+    <text x="590" y="170">initiator:s_se</text>
+  </g>
+
