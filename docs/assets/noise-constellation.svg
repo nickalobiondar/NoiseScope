@@ -18,3 +18,10 @@
     <text x="590" y="170">initiator:s_se</text>
   </g>
 
+  <!-- travelling pulse along the path, shows the replay walking states -->
+  <circle r="5" fill="#3fb950">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M140,180 L320,120 L500,210 L660,150"/>
+  </circle>
+
+  <!-- state nodes -->
+  <g font-size="12" text-anchor="middle">
