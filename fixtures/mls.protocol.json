@@ -4,3 +4,7 @@
   "description": "Abstract, wire-INCOMPATIBLE teaching model loosely inspired by the MLS group handshake (Proposal -> Commit -> Welcome/epoch change). No ratchet tree, key packages, or ciphersuites are modeled. Epoch progression is represented by per-role sequence numbers. Do NOT use for interoperability or security claims.",
   "roles": ["proposer", "committer", "joiner"],
   "initial": "epoch_open",
+  "states": ["epoch_open", "proposed", "committed", "welcomed"],
+  "accepting": ["welcomed"],
+  "transitions": [
+    {"from": "epoch_open", "to": "proposed", "role": "proposer", "msg": "Proposal",
