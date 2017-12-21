@@ -8,3 +8,7 @@
   "accepting": ["welcomed"],
   "transitions": [
     {"from": "epoch_open", "to": "proposed", "role": "proposer", "msg": "Proposal",
+     "requires_seq": true,
+     "note": "A member proposes an add/update/remove (abstracted)."},
+    {"from": "proposed", "to": "committed", "role": "committer", "msg": "Commit",
+     "requires_fresh_nonce": true, "requires_seq": true,
