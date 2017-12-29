@@ -1,2 +1,7 @@
 {
   "kind": "protocol",
+  "name": "noise-XX-abstract",
+  "description": "Abstract, wire-INCOMPATIBLE teaching model loosely inspired by the Noise XX pattern (-> e, <- e ee s es, -> s se). Tokens are treated as opaque message types; no real Diffie-Hellman, key schedule, or AEAD is modeled. Do NOT use for interoperability or security claims.",
+  "roles": ["initiator", "responder"],
+  "initial": "await_e",
+  "states": ["await_e", "await_ee", "await_se", "established"],
