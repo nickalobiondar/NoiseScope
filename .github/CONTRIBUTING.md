@@ -9,3 +9,8 @@ the constellation.
 
 - Determinism is the point: the same model + transcript + seed must always
   produce the same mutations and the same report. No wall-clock, no map
+  iteration order in output.
+- The transcript/protocol JSON schema is additive-only; field names are frozen.
+- Every new mutation operator ships with a fixture pair (`.ok` transcript and a
+  diverging one).
+
