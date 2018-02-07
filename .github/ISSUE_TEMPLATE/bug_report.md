@@ -6,3 +6,9 @@ labels: bug
 
 **What happened**
 
+<!-- expected vs actual -->
+
+**Minimal reproducer**
+
+```
+cargo run -- lint fixtures/noise-xx.protocol.json
