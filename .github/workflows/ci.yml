@@ -22,3 +22,13 @@ jobs:
       - name: Test
         run: cargo test --verbose
       - name: Fixture smoke tests
+        run: |
+          set -e
+          cargo run --quiet -- lint fixtures/noise-xx.protocol.json
+          cargo run --quiet -- lint fixtures/tls13.protocol.json
+          cargo run --quiet -- lint fixtures/mls.protocol.json
+          # conforming transcripts exit 0
+          cargo run --quiet -- check fixtures/noise-xx.protocol.json fixtures/noise-xx.ok.transcript.json
+          cargo run --quiet -- check fixtures/tls13.protocol.json fixtures/tls13.ok.transcript.json
+          cargo run --quiet -- check fixtures/mls.protocol.json fixtures/mls.ok.transcript.json
+          # diverging transcript must exit non-zero
