@@ -32,3 +32,12 @@ jobs:
           cargo run --quiet -- check fixtures/tls13.protocol.json fixtures/tls13.ok.transcript.json
           cargo run --quiet -- check fixtures/mls.protocol.json fixtures/mls.ok.transcript.json
           # diverging transcript must exit non-zero
+          if cargo run --quiet -- check fixtures/tls13.protocol.json fixtures/tls13.reorder.transcript.json; then
+            echo "expected reorder transcript to diverge"; exit 1
+          fi
+
+  viewer:
+    name: typescript viewer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
