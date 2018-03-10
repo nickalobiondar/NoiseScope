@@ -1,2 +1,10 @@
 [package]
 name = "noisescope"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.74"
+description = "A cryptographic handshake transcript state-machine analyzer and fuzzer (not a cryptographic proof tool)."
+license = "MIT"
+readme = "README.md"
+repository = "https://example.invalid/noisescope"
+keywords = ["handshake", "state-machine", "fuzzer", "protocol", "analyzer"]
