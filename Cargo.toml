@@ -8,3 +8,11 @@ license = "MIT"
 readme = "README.md"
 repository = "https://example.invalid/noisescope"
 keywords = ["handshake", "state-machine", "fuzzer", "protocol", "analyzer"]
+categories = ["command-line-utilities", "development-tools"]
+
+[[bin]]
+name = "noisescope"
+path = "src/main.rs"
+
+[lib]
+name = "noisescope"
