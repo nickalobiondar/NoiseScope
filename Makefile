@@ -16,3 +16,14 @@ TLS_REORD  := fixtures/tls13.reorder.transcript.json
 .DEFAULT_GOAL := help
 
 .PHONY: help
+help: ## Show this help
+	@echo "noisescope make targets:"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
+		awk 'BEGIN {FS = ":.*?## "}; {printf "  %-14s %s\n", $$1, $$2}'
+
+.PHONY: build
+build: build-rust build-viewer ## Build the release binary and the viewer
+
+.PHONY: build-rust
+build-rust: ## Build the release Rust binary
+	$(CARGO) build --release
