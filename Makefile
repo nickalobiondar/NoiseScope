@@ -49,3 +49,13 @@ test-viewer: build-viewer ## Run the viewer tests (skipped if npm missing)
 
 .PHONY: fmt
 fmt: ## Format Rust sources (skipped if rustfmt missing)
+	@command -v rustfmt >/dev/null 2>&1 && $(CARGO) fmt || echo "note: rustfmt not found, skipping"
+
+.PHONY: fmt-check
+fmt-check: ## Check formatting (skipped if rustfmt missing)
+	@command -v rustfmt >/dev/null 2>&1 && $(CARGO) fmt --check || echo "note: rustfmt not found, skipping fmt-check"
+
+.PHONY: clippy
+clippy: ## Run clippy (skipped if clippy missing)
+	@command -v cargo-clippy >/dev/null 2>&1 && $(CARGO) clippy --all-targets -- -D warnings || echo "note: clippy not found, skipping"
+
