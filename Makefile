@@ -38,3 +38,14 @@ build-viewer: ## Build the TypeScript viewer (skipped if npm missing)
 test: test-rust test-viewer ## Run all tests
 
 .PHONY: test-rust
+test-rust: ## Run Rust unit + integration tests
+	$(CARGO) test
+
+.PHONY: test-viewer
+test-viewer: build-viewer ## Run the viewer tests (skipped if npm missing)
+	@command -v $(NPM) >/dev/null 2>&1 && { \
+		cd $(VIEWER_DIR) && $(NPM) test; \
+	} || echo "note: npm not found, skipping viewer tests"
+
+.PHONY: fmt
+fmt: ## Format Rust sources (skipped if rustfmt missing)
