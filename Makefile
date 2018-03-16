@@ -27,3 +27,14 @@ build: build-rust build-viewer ## Build the release binary and the viewer
 .PHONY: build-rust
 build-rust: ## Build the release Rust binary
 	$(CARGO) build --release
+
+.PHONY: build-viewer
+build-viewer: ## Build the TypeScript viewer (skipped if npm missing)
+	@command -v $(NPM) >/dev/null 2>&1 && { \
+		cd $(VIEWER_DIR) && $(NPM) install --no-audit --no-fund && $(NPM) run build; \
+	} || echo "note: npm not found, skipping viewer build"
+
+.PHONY: test
+test: test-rust test-viewer ## Run all tests
+
+.PHONY: test-rust
