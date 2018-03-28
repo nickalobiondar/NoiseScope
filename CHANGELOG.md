@@ -8,3 +8,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - planning: SSH handshake model alongside the Noise/MLS/TLS13 models
+
