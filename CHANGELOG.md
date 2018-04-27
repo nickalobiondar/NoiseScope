@@ -13,3 +13,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - stable transcript-lint schema (frozen field names, additive-only)
+- minimization pass: shrink a diverging trace to the smallest reproducing case
