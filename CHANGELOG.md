@@ -16,3 +16,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - minimization pass: shrink a diverging trace to the smallest reproducing case
 - deterministic mutation engine with seeded RNG (same seed, same mutation set)
 - viewer ships prebuilt `dist/` for offline use
+
