@@ -18,3 +18,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - viewer ships prebuilt `dist/` for offline use
 
 ### Verified
+- `cargo test` - 40 unit + 6 integration tests green
