@@ -46,3 +46,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ASCII + SVG rendering in the TypeScript viewer
 
 ## [0.2.0] - 2019-11-06
+
