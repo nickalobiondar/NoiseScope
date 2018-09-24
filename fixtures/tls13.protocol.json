@@ -11,4 +11,3 @@
      "requires_fresh_nonce": true,
      "note": "ClientHello carries a fresh random (abstracted as a nonce)."},
     {"from": "hello_done", "to": "server_flight_done", "role": "server", "msg": "ServerFlight",
-     "requires_fresh_nonce": true, "requires_seq": true,
