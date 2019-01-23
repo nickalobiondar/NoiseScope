@@ -257,3 +257,119 @@ sequenced message. Full semantics live in [`docs/PROTOCOL.md`](docs/PROTOCOL.md)
 
 ## The mutation kit
 
+| Mutation       | Real-world analogue                | Effect                                   |
+|----------------|------------------------------------|------------------------------------------|
+| `drop`         | message lost in flight             | removes one event                        |
+| `duplicate`    | replay / double delivery           | inserts a copy right after an event      |
+| `reorder`      | out-of-order network delivery      | swaps two events                         |
+| `corrupt_meta` | tampered / stale metadata          | flips a `nonce`, `seq`, or `role` field  |
+
+Mutation plans are scheduled by a seeded SplitMix64 PRNG. Out-of-range indices
+(possible after a `drop` shrinks the list) degrade to no-ops, which keeps
+mutation application total and the minimizer panic-free.
+
+### Minimization
+
+Failing plans are reduced with the classic greedy delta-debugging pass: try
+removing each mutation, keep the removal whenever the transcript still diverges,
+and iterate to a fixed point. The result is a **1-minimal** counter-example, and
+the report tells you how many predicate evaluations it took to get there.
+
+---
+
+## Command reference
+
+```text
+noisescope <command> [args] [flags]
+
+  lint    <spec.json>                     check a spec for internal consistency
+  check   <spec.json> <transcript.json>   replay a transcript, report divergence
+  fuzz    <spec.json> <transcript.json>   mutate & minimize failing sequences
+  paths   <spec.json> <transcript.json>   emit handshake path JSON (for the viewer)
+  version                                 print version
+  help                                    show help
+
+Flags:
+  --format json|text    output format (default: text; `paths` is always JSON)
+  --seed <u64>          fuzz PRNG seed (default: 0x5EED; accepts 0x-hex)
+  --trials <n>          fuzz trial budget (default: 256)
+  --max-plan-len <n>    max mutations per plan (default: 4)
+  --max-findings <n>    stop after n findings (default: 8; 0 = unlimited)
+  --out <path>          write output to a file instead of stdout
+
+Exit codes:  0 conforming/clean · 1 divergence/violations · 2 usage/I/O error
+```
+
+---
+
+## Bundled fixtures
+
+Three abstract, **wire-incompatible** teaching models live in `fixtures/`:
+
+- **`noise-xx`** — loosely inspired by the Noise `XX` pattern
+  (`-> e`, `<- e ee s es`, `-> s se`), collapsed into abstract message tokens.
+- **`tls13`** — loosely inspired by the TLS 1.3 flight structure, with the whole
+  server flight collapsed into one abstract `ServerFlight` message.
+- **`mls`** — loosely inspired by the MLS `Proposal → Commit → Welcome` group
+  handshake, with epoch progression modeled as per-role sequence numbers.
+
+Each ships with a conforming transcript plus at least one diverging transcript
+(a nonce replay, an out-of-order flight). They exist to make the *tool*
+legible — not to represent the real protocols.
+
+---
+
+## Project layout
+
+```text
+noisescope/
+├── src/
+│   ├── main.rs         CLI (lint / check / fuzz / paths)
+│   ├── lib.rs          crate root + module map
+│   ├── json.rs         std-only JSON parse/serialize
+│   ├── model.rs        ProtocolSpec, Transcript, Event
+│   ├── parser.rs       JSON → model
+│   ├── engine.rs       replay + the four invariants
+│   ├── mutate.rs       SplitMix64 PRNG + mutations
+│   ├── minimize.rs     delta-debugging minimizer
+│   └── divergence.rs   fuzz orchestration + JSON/text reports
+├── tests/integration.rs
+├── fixtures/           noise / tls / mls specs + transcripts
+├── viewer/             TypeScript path viewer (ASCII + SVG)
+├── docs/
+│   ├── PROTOCOL.md     the full schema & semantics
+│   └── assets/         two animated local SVGs
+├── Makefile  ·  Cargo.toml  ·  LICENSE  ·  CHANGELOG.md
+└── .github/workflows/ci.yml
+```
+
+---
+
+## Building everything
+
+```console
+$ make check     # fmt-check + clippy (if available) + rust tests + viewer tests
+$ make build     # release binary + compiled viewer
+$ make demo      # runs the check/fuzz/paths demos shown above
+```
+
+The `Makefile` degrades gracefully: optional tools (`rustfmt`, `clippy`) are
+skipped with a note if they are not installed, so `make check` works on a bare
+toolchain.
+
+---
+
+## Design notes: why it looks the way it does
+
+**Standard library only, on purpose.** The core crate lists *no* dependencies.
+That includes JSON: `src/json.rs` is a small, hand-audited reader/writer with
+ordered object keys so report output is stable and diff-friendly. The payoff is
+supply-chain simplicity — you can read the entire trust surface — and
+reproducible builds that will still compile years from now. The cost is that we
+re-implement a few conveniences; the tests in `json.rs` cover escapes, surrogate
+pairs, integer formatting, and trailing-garbage rejection to keep that honest.
+
+**Determinism as a feature, not an accident.** A fuzzing tool is only useful if
+its findings can be reproduced and shared. noisescope threads a single
+SplitMix64 seed through the whole run: the top-level `--seed`, an XOR-mixed
+per-trial seed, and a per-plan generator are all derived from it by pure
