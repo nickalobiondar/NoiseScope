@@ -13,3 +13,17 @@
     <line x1="340" y1="70" x2="340" y2="300" stroke="#12203a"/>
     <line x1="480" y1="70" x2="480" y2="300" stroke="#12203a"/>
     <line x1="620" y1="70" x2="620" y2="300" stroke="#12203a"/>
+  </g>
+
+  <!-- event tick labels -->
+  <g fill="#5d708f" font-size="10" text-anchor="middle">
+    <text x="60" y="316">e0</text>
+    <text x="200" y="316">e1</text>
+    <text x="340" y="316">e2</text>
+    <text x="480" y="316">e3</text>
+    <text x="620" y="316">e4</text>
+  </g>
+
+  <!-- baseline (conforming) trace, drawn on -->
+  <polyline points="60,260 200,200 340,140 480,120 620,100" fill="none" stroke="#3fb950" stroke-width="2.5" stroke-dasharray="900" stroke-dashoffset="900">
+    <animate attributeName="stroke-dashoffset" from="900" to="0" dur="2.4s" fill="freeze"/>
