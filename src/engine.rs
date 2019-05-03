@@ -356,3 +356,52 @@ mod tests {
         let mut s = spec();
         s.transitions.push(Transition {
             from: "s1".into(),
+            to: "s1".into(),
+            role: "i".into(),
+            msg: "e".into(),
+            requires_fresh_nonce: true,
+            requires_seq: false,
+            note: None,
+        });
+        let t2 = transcript_from(
+            "p",
+            &[
+                ev("a", "i", "e", Some(5), None),
+                ev("b", "i", "e", Some(5), None),
+                ev("c", "r", "ee", None, Some(0)),
+            ],
+        );
+        let r = replay(&s, &t2);
+        assert!(r
+            .violations
+            .iter()
+            .any(|v| v.kind == ViolationKind::NonceReplay));
+    }
+
+    #[test]
+    fn sequence_violation_detected() {
+        let t = transcript_from(
+            "p",
+            &[
+                ev("a", "i", "e", Some(1), None),
+                ev("b", "r", "ee", None, Some(5)), // expected 0
+            ],
+        );
+        let r = replay(&spec(), &t);
+        assert!(r
+            .violations
+            .iter()
+            .any(|v| v.kind == ViolationKind::SequenceViolation));
+    }
+
+    #[test]
+    fn not_accepting_when_short() {
+        let t = transcript_from("p", &[ev("a", "i", "e", Some(1), None)]);
+        let r = replay(&spec(), &t);
+        assert!(!r.reached_accepting);
+        assert!(r
+            .violations
+            .iter()
+            .any(|v| v.kind == ViolationKind::NotAccepting));
+    }
+// review note: seeded mutations stay deterministic
