@@ -3,3 +3,15 @@
   <desc id="csDesc">The noise-XX abstract state machine drawn as four states connected by transitions. A pulse walks the legal path from await_e to established as a conforming transcript is replayed. Structural only, not a cryptographic claim.</desc>
 
   <rect width="760" height="320" fill="#0b1220"/>
+
+  <!-- transition edges (the legal path) -->
+  <g stroke="#33507a" stroke-width="2" fill="none">
+    <line x1="140" y1="180" x2="320" y2="120"/>
+    <line x1="320" y1="120" x2="500" y2="210"/>
+    <line x1="500" y1="210" x2="660" y2="150"/>
+  </g>
+
+  <!-- edge labels: the abstract messages -->
+  <g fill="#8697b3" font-size="10.5" text-anchor="middle">
+    <text x="230" y="140">initiator:e</text>
+    <text x="410" y="180">responder:e_ee_s_es</text>
