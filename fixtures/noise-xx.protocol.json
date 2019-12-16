@@ -2,3 +2,15 @@
   "kind": "protocol",
   "name": "noise-XX-abstract",
   "description": "Abstract, wire-INCOMPATIBLE teaching model loosely inspired by the Noise XX pattern (-> e, <- e ee s es, -> s se). Tokens are treated as opaque message types; no real Diffie-Hellman, key schedule, or AEAD is modeled. Do NOT use for interoperability or security claims.",
+  "roles": ["initiator", "responder"],
+  "initial": "await_e",
+  "states": ["await_e", "await_ee", "await_se", "established"],
+  "accepting": ["established"],
+  "transitions": [
+    {
+      "from": "await_e", "to": "await_ee", "role": "initiator", "msg": "e",
+      "requires_fresh_nonce": true,
+      "note": "Message 1: initiator ephemeral. Requires a fresh nonce."
+    },
+    {
+      "from": "await_ee", "to": "await_se", "role": "responder", "msg": "e_ee_s_es",
