@@ -12,30 +12,3 @@
   </g>
 
   <!-- edge labels: the abstract messages -->
-  <g fill="#8697b3" font-size="10.5" text-anchor="middle">
-    <text x="230" y="140">initiator:e</text>
-    <text x="410" y="180">responder:e_ee_s_es</text>
-    <text x="590" y="170">initiator:s_se</text>
-  </g>
-
-  <!-- travelling pulse along the path, shows the replay walking states -->
-  <circle r="5" fill="#3fb950">
-    <animateMotion dur="4.2s" repeatCount="indefinite" path="M140,180 L320,120 L500,210 L660,150"/>
-  </circle>
-
-  <!-- state nodes -->
-  <g font-size="12" text-anchor="middle">
-    <g>
-      <circle cx="140" cy="180" r="9" fill="#0b1220" stroke="#5b9bd5" stroke-width="2.5"/>
-      <text x="140" y="208" fill="#c7d3e6">await_e</text>
-      <text x="140" y="222" fill="#5d708f" font-size="9">initial</text>
-    </g>
-    <circle cx="320" cy="120" r="9" fill="#0b1220" stroke="#5b9bd5" stroke-width="2.5"/>
-    <text x="320" y="104" fill="#c7d3e6">await_ee</text>
-    <circle cx="500" cy="210" r="9" fill="#0b1220" stroke="#5b9bd5" stroke-width="2.5"/>
-    <text x="500" y="236" fill="#c7d3e6">await_se</text>
-    <g>
-      <circle cx="660" cy="150" r="11" fill="#0b1220" stroke="#3fb950" stroke-width="2.5"/>
-      <circle cx="660" cy="150" r="6" fill="none" stroke="#3fb950" stroke-width="1.5"/>
-      <text x="660" y="128" fill="#3fb950">established</text>
-      <text x="660" y="176" fill="#5d708f" font-size="9">accepting</text>
