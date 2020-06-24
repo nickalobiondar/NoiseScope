@@ -7,7 +7,3 @@
   "states": ["start", "hello_done", "server_flight_done", "established"],
   "accepting": ["established"],
   "transitions": [
-    {"from": "start", "to": "hello_done", "role": "client", "msg": "ClientHello",
-     "requires_fresh_nonce": true,
-     "note": "ClientHello carries a fresh random (abstracted as a nonce)."},
-    {"from": "hello_done", "to": "server_flight_done", "role": "server", "msg": "ServerFlight",
