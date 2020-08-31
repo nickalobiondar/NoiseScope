@@ -1,3 +1,5 @@
 {
   "kind": "transcript",
   "protocol": "tls13-abstract",
+  "events": [
+    {"id": "ch", "role": "client", "msg": "ClientHello", "nonce": 500,
