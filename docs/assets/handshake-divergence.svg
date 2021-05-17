@@ -24,3 +24,17 @@
     <text x="620" y="316">e4</text>
   </g>
 
+  <!-- baseline (conforming) trace, drawn on -->
+  <polyline points="60,260 200,200 340,140 480,120 620,100" fill="none" stroke="#3fb950" stroke-width="2.5" stroke-dasharray="900" stroke-dashoffset="900">
+    <animate attributeName="stroke-dashoffset" from="900" to="0" dur="2.4s" fill="freeze"/>
+  </polyline>
+
+  <!-- mutated (diverging) trace -->
+  <polyline points="60,260 200,200 340,215 480,255 620,285" fill="none" stroke="#d68a1a" stroke-width="2.5" stroke-dasharray="7,7">
+    <animate attributeName="stroke-dashoffset" values="0;-56" dur="1.2s" repeatCount="indefinite"/>
+  </polyline>
+
+  <!-- divergence marker where the traces split -->
+  <g transform="translate(340,185)">
+    <circle r="6" fill="#e5484d"/>
+    <line x1="0" y1="-46" x2="0" y2="46" stroke="#e5484d" stroke-width="1" stroke-dasharray="2,4"/>
