@@ -5,3 +5,5 @@
     {"id": "ch", "role": "client", "msg": "ClientHello", "nonce": 500,
      "meta": {"abstract_group": "x25519", "note": "group name is illustrative only"}},
     {"id": "sf", "role": "server", "msg": "ServerFlight", "nonce": 600, "seq": 0,
+     "meta": {"flight": "ServerHello,EncryptedExtensions,Certificate,CertVerify,Finished"}},
+    {"id": "cf", "role": "client", "msg": "ClientFinished", "seq": 0,
