@@ -20,3 +20,17 @@
     <text x="60" y="316">e0</text>
     <text x="200" y="316">e1</text>
     <text x="340" y="316">e2</text>
+    <text x="480" y="316">e3</text>
+    <text x="620" y="316">e4</text>
+  </g>
+
+  <!-- baseline (conforming) trace, drawn on -->
+  <polyline points="60,260 200,200 340,140 480,120 620,100" fill="none" stroke="#3fb950" stroke-width="2.5" stroke-dasharray="900" stroke-dashoffset="900">
+    <animate attributeName="stroke-dashoffset" from="900" to="0" dur="2.4s" fill="freeze"/>
+  </polyline>
+
+  <!-- mutated (diverging) trace -->
+  <polyline points="60,260 200,200 340,215 480,255 620,285" fill="none" stroke="#d68a1a" stroke-width="2.5" stroke-dasharray="7,7">
+    <animate attributeName="stroke-dashoffset" values="0;-56" dur="1.2s" repeatCount="indefinite"/>
+  </polyline>
+
