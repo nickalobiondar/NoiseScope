@@ -15,3 +15,15 @@
   <g fill="#8697b3" font-size="10.5" text-anchor="middle">
     <text x="230" y="140">initiator:e</text>
     <text x="410" y="180">responder:e_ee_s_es</text>
+    <text x="590" y="170">initiator:s_se</text>
+  </g>
+
+  <!-- travelling pulse along the path, shows the replay walking states -->
+  <circle r="5" fill="#3fb950">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M140,180 L320,120 L500,210 L660,150"/>
+  </circle>
+
+  <!-- state nodes -->
+  <g font-size="12" text-anchor="middle">
+    <g>
+      <circle cx="140" cy="180" r="9" fill="#0b1220" stroke="#5b9bd5" stroke-width="2.5"/>
