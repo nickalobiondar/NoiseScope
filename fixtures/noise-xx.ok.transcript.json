@@ -1,10 +1,2 @@
 {
   "kind": "transcript",
-  "protocol": "noise-XX-abstract",
-  "events": [
-    {"id": "m1", "role": "initiator", "msg": "e", "nonce": 1001,
-     "meta": {"pattern": "XX", "token": "e"}},
-    {"id": "m2", "role": "responder", "msg": "e_ee_s_es", "nonce": 2002, "seq": 0,
-     "meta": {"token": "e,ee,s,es"}},
-    {"id": "m3", "role": "initiator", "msg": "s_se", "seq": 0,
-     "meta": {"token": "s,se", "note": "initiator's first sequenced msg -> per-role seq starts at 0"}}
