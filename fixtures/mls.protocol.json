@@ -6,7 +6,3 @@
   "initial": "epoch_open",
   "states": ["epoch_open", "proposed", "committed", "welcomed"],
   "accepting": ["welcomed"],
-  "transitions": [
-    {"from": "epoch_open", "to": "proposed", "role": "proposer", "msg": "Proposal",
-     "requires_seq": true,
-     "note": "A member proposes an add/update/remove (abstracted)."},
