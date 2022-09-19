@@ -367,3 +367,55 @@ mod tests {
         t.events.push(b);
         t
     }
+
+    #[test]
+    fn baseline_conforms() {
+        let r = replay(&spec(), &good_transcript());
+        assert!(r.is_conforming());
+    }
+
+    #[test]
+    fn fuzz_finds_and_minimizes() {
+        let cfg = FuzzConfig {
+            seed: 1,
+            trials: 200,
+            max_plan_len: 4,
+            max_findings: 5,
+        };
+        let report = fuzz(&spec(), &good_transcript(), &cfg);
+        assert!(report.baseline_conforming);
+        assert!(!report.findings.is_empty(), "expected at least one finding");
+        // Every minimized plan must genuinely still fail.
+        let roles = spec().roles.clone();
+        for f in &report.findings {
+            let mutated = apply_all(&good_transcript(), &f.minimized.plan, &roles);
+            assert!(!replay(&spec(), &mutated).is_conforming());
+            assert!(f.minimized.plan.len() <= f.plan.len());
+        }
+    }
+
+    #[test]
+    fn json_is_stable_and_parseable() {
+        let cfg = FuzzConfig {
+            seed: 3,
+            trials: 50,
+            max_plan_len: 3,
+            max_findings: 3,
+        };
+        let report = fuzz(&spec(), &good_transcript(), &cfg);
+        let j = report_json(&report).to_pretty();
+        // Round-trips through our own parser.
+        let reparsed = crate::json::parse(&j).unwrap();
+        assert_eq!(
+            reparsed.get("tool").and_then(|v| v.as_str()),
+            Some("noisescope")
+        );
+    }
+
+    #[test]
+    fn text_report_mentions_disclaimer() {
+        let report = fuzz(&spec(), &good_transcript(), &FuzzConfig::default());
+        let txt = report_text(&report);
+        assert!(txt.contains("not a cryptographic proof"));
+    }
+// review note: verdicts stay byte-stable
