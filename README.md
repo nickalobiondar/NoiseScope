@@ -53,3 +53,120 @@ auditable in an afternoon.
 ## Why a "constellation"?
 
 A handshake is a path through a small sky of states. Draw the states as stars
+and the legal transitions as the lines between them, and a transcript becomes a
+single lit path across that constellation. Most analysis tools give you a log;
+noisescope gives you the *chart* — and then it perturbs the chart to see which
+small nudges send the path off course.
+
+The second instrument panel is the **divergence scope**:
+
+<p align="center">
+  <img src="docs/assets/handshake-divergence.svg" alt="noisescope divergence instrument" width="720"/>
+</p>
+
+The green trace is a baseline that conforms. The amber trace is the same
+transcript after a *minimized* mutation. Where they part company, the red marker
+pulses — that split point is exactly what the minimizer hands you.
+
+Both SVGs above are local, self-contained, and animated (SMIL). No external
+assets, no runtime, no network.
+
+---
+
+## Quick start
+
+```console
+$ cargo build --release
+$ cargo test            # 34 unit + 6 integration tests
+
+# 1. Is my spec internally consistent?
+$ cargo run -- lint fixtures/noise-xx.protocol.json
+spec `noise-XX-abstract` is internally consistent
+
+# 2. Does a transcript conform?
+$ cargo run -- check fixtures/mls.protocol.json fixtures/mls.ok.transcript.json
+```
+
+That last command prints a real replay trace:
+
+```text
+protocol: mls-abstract
+final state: welcomed (accepting)
+conforming: yes
+path:
+  epoch_open --[proposer:Proposal]--> proposed
+  proposed --[committer:Commit#7777]--> committed
+  committed --[joiner:WelcomeAck]--> welcomed
+violations: none
+```
+
+---
+
+## Reading a divergence
+
+Feed it a transcript where the server flight arrives *before* the client hello:
+
+```console
+$ cargo run -- check fixtures/tls13.protocol.json fixtures/tls13.reorder.transcript.json
+```
+
+```text
+protocol: tls13-abstract
+final state: hello_done (NOT accepting)
+conforming: no
+path:
+  start --[client:ClientHello#500]--> hello_done
+violations (3):
+  [unexpected_message] @event 0 state=start: got server:ServerFlight in state `start`; expected one of [client:ClientHello]
+  [unexpected_message] @event 2 state=hello_done: got client:ClientFinished in state `hello_done`; expected one of [server:ServerFlight]
+  [not_accepting] @event 3 state=hello_done: final state `hello_done` is not accepting (accepting: [established])
+```
+
+Notice the engine is **fail-soft**: the out-of-order `ServerFlight` is reported
+but does not derail evaluation of the rest of the transcript, so you see *every*
+fault in one pass, not just the first. The exit code is `1`, so this is directly
+usable as a CI gate.
+
+---
+
+## Flying mutations: the fuzzer
+
+Start from a transcript that *does* conform and let noisescope hunt for the
+smallest edits that break it:
+
+```console
+$ cargo run -- fuzz fixtures/noise-xx.protocol.json fixtures/noise-xx.ok.transcript.json \
+      --seed 0x5EED --trials 200 --max-findings 1
+```
+
+```text
+noisescope — divergence report
+(structural analysis only; not a cryptographic proof)
+protocol: noise-XX-abstract
+baseline conforming: yes
+trials: 200
+findings: 1
+
+--- finding #0 (seed 0x5eed) ---
+minimized plan (1 of 1 mutations, 2 evals):
+  - drop event #2
+divergence:
+  protocol: noise-XX-abstract
+  final state: await_se (NOT accepting)
+  conforming: no
+  path:
+    await_e --[initiator:e#1001]--> await_ee
+    await_ee --[responder:e_ee_s_es#2002]--> await_se
+  violations (1):
+    [not_accepting] @event 2 state=await_se: final state `await_se` is not accepting (accepting: [established])
+```
+
+The finding is exact: dropping the third message strands the machine in
+`await_se`, one step short of `established`. The minimizer confirms this is
+**1-minimal** — remove that single mutation and the transcript conforms again.
+
+Because the plan generator is a seeded SplitMix64 PRNG, re-running with the same
+flags reproduces byte-for-byte identical JSON. That determinism is asserted by
+the test suite (`fuzzing_is_deterministic_and_minimal`).
+
+### JSON for machines
