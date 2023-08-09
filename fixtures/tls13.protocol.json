@@ -11,7 +11,3 @@
      "requires_fresh_nonce": true,
      "note": "ClientHello carries a fresh random (abstracted as a nonce)."},
     {"from": "hello_done", "to": "server_flight_done", "role": "server", "msg": "ServerFlight",
-     "requires_fresh_nonce": true, "requires_seq": true,
-     "note": "ServerHello..Finished collapsed into one abstract flight."},
-    {"from": "server_flight_done", "to": "established", "role": "client", "msg": "ClientFinished",
-     "requires_seq": true,
