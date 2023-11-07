@@ -38,3 +38,53 @@ requirements.
 | `transitions`  | Transition[]      | yes      | The edges of the machine (see below).               |
 
 ### 2.2 Transition
+
+| Field                  | Type    | Required | Default | Meaning                                                       |
+|------------------------|---------|----------|---------|---------------------------------------------------------------|
+| `from`                 | string  | yes      | —       | Source state.                                                 |
+| `to`                   | string  | yes      | —       | Target state.                                                 |
+| `role`                 | string  | yes      | —       | Role expected to send this message.                           |
+| `msg`                  | string  | yes      | —       | Message-type label triggering the transition.                 |
+| `requires_fresh_nonce` | boolean | no       | `false` | Event must carry a nonce **not seen before** in this run.     |
+| `requires_seq`         | boolean | no       | `false` | Event must carry `seq == previous_seq_for_role + 1` (from 0). |
+| `note`                 | string  | no       | —       | Human note.                                                   |
+
+### 2.3 Example
+
+```json
+{
+  "kind": "protocol",
+  "name": "noise-XX-abstract",
+  "roles": ["initiator", "responder"],
+  "initial": "await_e",
+  "states": ["await_e", "await_ee", "await_se", "established"],
+  "accepting": ["established"],
+  "transitions": [
+    {"from": "await_e",  "to": "await_ee", "role": "initiator", "msg": "e",         "requires_fresh_nonce": true},
+    {"from": "await_ee", "to": "await_se", "role": "responder", "msg": "e_ee_s_es", "requires_fresh_nonce": true, "requires_seq": true},
+    {"from": "await_se", "to": "established", "role": "initiator", "msg": "s_se",    "requires_seq": true}
+  ]
+}
+```
+
+### 2.4 Spec linting
+
+`noisescope lint spec.json` reports internal inconsistencies **without** any
+transcript: an undeclared `initial`/`accepting` state, transitions referencing
+unknown states, or transitions using undeclared roles. A clean spec exits `0`.
+
+---
+
+## 3. Transcript
+
+A transcript is an ordered list of observed events.
+
+### 3.1 Fields
+
+| Field      | Type                | Required | Meaning                                        |
+|------------|---------------------|----------|------------------------------------------------|
+| `protocol` | string              | yes      | Name of the spec this transcript targets.      |
+| `events`   | Event[]             | yes      | Ordered events.                                |
+
+### 3.2 Event
+
