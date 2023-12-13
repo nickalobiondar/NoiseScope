@@ -21,3 +21,15 @@
   <!-- travelling pulse along the path, shows the replay walking states -->
   <circle r="5" fill="#3fb950">
     <animateMotion dur="4.2s" repeatCount="indefinite" path="M140,180 L320,120 L500,210 L660,150"/>
+  </circle>
+
+  <!-- state nodes -->
+  <g font-size="12" text-anchor="middle">
+    <g>
+      <circle cx="140" cy="180" r="9" fill="#0b1220" stroke="#5b9bd5" stroke-width="2.5"/>
+      <text x="140" y="208" fill="#c7d3e6">await_e</text>
+      <text x="140" y="222" fill="#5d708f" font-size="9">initial</text>
+    </g>
+    <circle cx="320" cy="120" r="9" fill="#0b1220" stroke="#5b9bd5" stroke-width="2.5"/>
+    <text x="320" y="104" fill="#c7d3e6">await_ee</text>
+    <circle cx="500" cy="210" r="9" fill="#0b1220" stroke="#5b9bd5" stroke-width="2.5"/>
