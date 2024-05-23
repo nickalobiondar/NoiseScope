@@ -3,7 +3,3 @@
   "name": "tls13-abstract",
   "description": "Abstract, wire-INCOMPATIBLE teaching model loosely inspired by the TLS 1.3 full handshake flight structure (ClientHello / ServerHello .. Finished / Client Finished). No records, extensions, key schedule, or certificates are modeled. Do NOT use for interoperability or security claims.",
   "roles": ["client", "server"],
-  "initial": "start",
-  "states": ["start", "hello_done", "server_flight_done", "established"],
-  "accepting": ["established"],
-  "transitions": [
