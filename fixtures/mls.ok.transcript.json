@@ -4,3 +4,5 @@
   "events": [
     {"id": "p", "role": "proposer", "msg": "Proposal", "seq": 0,
      "meta": {"kind": "add", "note": "abstract add proposal"}},
+    {"id": "c", "role": "committer", "msg": "Commit", "nonce": 7777, "seq": 0,
+     "meta": {"epoch": "1"}},
