@@ -170,3 +170,119 @@ flags reproduces byte-for-byte identical JSON. That determinism is asserted by
 the test suite (`fuzzing_is_deterministic_and_minimal`).
 
 ### JSON for machines
+
+```console
+$ cargo run -- fuzz fixtures/noise-xx.protocol.json fixtures/noise-xx.ok.transcript.json \
+      --seed 0x5EED --trials 200 --max-findings 2 --format json
+```
+
+```json
+{
+  "tool": "noisescope",
+  "disclaimer": "structural handshake analysis only; not a cryptographic proof",
+  "protocol": "noise-XX-abstract",
+  "baseline_conforming": true,
+  "baseline": {
+    "final_state": "established",
+    "reached_accepting": true,
+    "conforming": true,
+    "consumed": 3,
+    "violations": [],
+    "path": [
+      { "event_index": 0, "event": "initiator:e#1001", "from": "await_e", "to": "await_ee" }
+    ]
+  },
+  "trials": 200,
+  "findings_count": 2,
+  "findings": [ /* each with original_plan, minimized_plan, minimizer_evaluations, divergence */ ]
+}
+```
+
+Every report carries the `disclaimer` field in-band, so downstream tooling can
+never mistake a structural report for a security verdict.
+
+---
+
+## The viewer: charting a path
+
+`noisescope paths ...` emits a viewer-friendly JSON document; the bundled
+TypeScript viewer turns it into an ASCII chart or a standalone animated SVG.
+
+```console
+$ cargo run -- paths fixtures/noise-xx.protocol.json fixtures/noise-xx.ok.transcript.json \
+      | node viewer/dist/cli.js
+noise-XX-abstract  [final: established ✓]
+(await_e)
+  └─ initiator:e#1001 ─▶ (await_ee)
+  └─ responder:e_ee_s_es#2002 ─▶ (await_se)
+  └─ initiator:s_se ─▶ ((established))
+```
+
+Double parentheses mark an accepting state. For a shareable diagram:
+
+```console
+$ cargo run -- paths fixtures/tls13.protocol.json fixtures/tls13.ok.transcript.json \
+      | node viewer/dist/cli.js --svg > handshake.svg
+```
+
+The viewer is pure TypeScript, uses only Node's built-ins (`node:fs`,
+`node:test`), and validates its input with a real type guard so malformed JSON
+fails loudly rather than rendering garbage.
+
+Build and test the viewer:
+
+```console
+$ cd viewer && npm install && npm run build && npm test
+```
+
+---
+
+## The four invariants
+
+For each event, the engine finds the transitions matching
+`(current_state, role, msg)` and enforces:
+
+| Invariant             | Fault kind            | Triggered when …                                            |
+|-----------------------|-----------------------|-------------------------------------------------------------|
+| **Order**             | `unexpected_message`  | no transition exists for that message from the current state |
+| **Role**              | `role_mismatch`       | the message is valid here but for a *different* role         |
+| **Nonce freshness**   | `nonce_replay`        | a required-fresh nonce is missing or already seen            |
+| **Sequence**          | `sequence_violation`  | a required `seq` is missing or ≠ previous-for-role + 1        |
+| **Termination**       | `not_accepting`       | the run ends outside the `accepting` set                     |
+
+`seq` is a **per-role** counter that starts at `0` for each role's first
+sequenced message. Full semantics live in [`docs/PROTOCOL.md`](docs/PROTOCOL.md).
+
+---
+
+## The mutation kit
+
+| Mutation       | Real-world analogue                | Effect                                   |
+|----------------|------------------------------------|------------------------------------------|
+| `drop`         | message lost in flight             | removes one event                        |
+| `duplicate`    | replay / double delivery           | inserts a copy right after an event      |
+| `reorder`      | out-of-order network delivery      | swaps two events                         |
+| `corrupt_meta` | tampered / stale metadata          | flips a `nonce`, `seq`, or `role` field  |
+
+Mutation plans are scheduled by a seeded SplitMix64 PRNG. Out-of-range indices
+(possible after a `drop` shrinks the list) degrade to no-ops, which keeps
+mutation application total and the minimizer panic-free.
+
+### Minimization
+
+Failing plans are reduced with the classic greedy delta-debugging pass: try
+removing each mutation, keep the removal whenever the transcript still diverges,
+and iterate to a fixed point. The result is a **1-minimal** counter-example, and
+the report tells you how many predicate evaluations it took to get there.
+
+---
+
+## Command reference
+
+```text
+noisescope <command> [args] [flags]
+
+  lint    <spec.json>                     check a spec for internal consistency
+  check   <spec.json> <transcript.json>   replay a transcript, report divergence
+  fuzz    <spec.json> <transcript.json>   mutate & minimize failing sequences
+  paths   <spec.json> <transcript.json>   emit handshake path JSON (for the viewer)
