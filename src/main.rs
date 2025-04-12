@@ -259,3 +259,43 @@ fn run() -> Result<i32, String> {
                 .set("states", Json::Arr(states))
                 .set("final_state", Json::Str(result.final_state.clone()))
                 .set("reached_accepting", Json::Bool(result.reached_accepting))
+                .set("path", Json::Arr(steps))
+                .build();
+            emit(&opts, &doc.to_pretty())?;
+            Ok(if result.is_conforming() { 0 } else { 1 })
+        }
+        other => Err(format!("unknown command `{other}` (try `noisescope help`)")),
+    }
+}
+
+fn load_pair(
+    opts: &Options,
+) -> Result<
+    (
+        noisescope::model::ProtocolSpec,
+        noisescope::model::Transcript,
+    ),
+    String,
+> {
+    let spec_path = opts
+        .positional
+        .first()
+        .ok_or("this command requires <spec.json> <transcript.json>")?;
+    let tr_path = opts
+        .positional
+        .get(1)
+        .ok_or("this command requires <transcript.json>")?;
+    let spec = parse_protocol(&read_file(spec_path)?).map_err(|e| e.to_string())?;
+    let transcript = parse_transcript(&read_file(tr_path)?).map_err(|e| e.to_string())?;
+    Ok((spec, transcript))
+}
+
+fn main() -> ExitCode {
+    match run() {
+        Ok(code) => ExitCode::from(code as u8),
+        Err(msg) => {
+            eprintln!("noisescope: {msg}");
+            ExitCode::from(2)
+        }
+    }
+// review note: keep CLI flags additive
