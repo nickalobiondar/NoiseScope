@@ -1,7 +1,1 @@
 {
-  "kind": "transcript",
-  "protocol": "noise-XX-abstract",
-  "events": [
-    {"id": "m1", "role": "initiator", "msg": "e", "nonce": 1001,
-     "meta": {"note": "reuses nonce below"}},
-    {"id": "m2", "role": "responder", "msg": "e_ee_s_es", "nonce": 1001, "seq": 0,
