@@ -88,3 +88,53 @@ A transcript is an ordered list of observed events.
 
 ### 3.2 Event
 
+| Field   | Type                  | Required | Meaning                                             |
+|---------|-----------------------|----------|-----------------------------------------------------|
+| `id`    | string                | no       | Stable id (defaults to `e{index}`).                 |
+| `role`  | string                | yes      | Sender role.                                        |
+| `msg`   | string                | yes      | Message-type label.                                 |
+| `nonce` | number (uint)         | no       | Freshness token (plain integer, **not** a key).     |
+| `seq`   | number (uint)         | no       | Per-role sequence counter.                          |
+| `meta`  | object<string,scalar> | no       | Free-form metadata; scalars are coerced to strings. |
+
+### 3.3 Example
+
+```json
+{
+  "kind": "transcript",
+  "protocol": "noise-XX-abstract",
+  "events": [
+    {"id": "m1", "role": "initiator", "msg": "e",         "nonce": 1001},
+    {"id": "m2", "role": "responder", "msg": "e_ee_s_es", "nonce": 2002, "seq": 0},
+    {"id": "m3", "role": "initiator", "msg": "s_se",      "seq": 0}
+  ]
+}
+```
+
+---
+
+## 4. Replay semantics & invariants
+
+The engine walks events in order from `initial`. For each event it looks up
+transitions matching `(current_state, role, msg)`:
+
+1. **Order** — if **no** transition matches the `msg` from the current state,
+   the event is an `unexpected_message`.
+2. **Role** — if a transition exists for that `msg` from the current state but
+   only for a *different* role, it is a `role_mismatch`.
+3. **Nonce** — when the chosen transition has `requires_fresh_nonce`, the event
+   must carry a `nonce` that has not been observed before in this run;
+   otherwise `nonce_replay` (missing nonce is also a `nonce_replay`).
+4. **Sequence** — when the chosen transition has `requires_seq`, the event's
+   `seq` must equal the previous sequence value for **that role** plus one, with
+   the first sequenced event for a role expected to be `0`; otherwise
+   `sequence_violation`.
+
+After the walk, if the final state is not in `accepting`, a `not_accepting`
+violation is added.
+
+### 4.1 Fail-soft walking
+
+On `unexpected_message` / `role_mismatch` the engine does **not** advance the
+state (the offending event is skipped) so later events can still be evaluated.
+Nonce/sequence problems are metadata faults layered on an otherwise valid step,
