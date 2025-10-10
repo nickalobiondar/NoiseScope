@@ -1,2 +1,4 @@
 {
   "kind": "transcript",
+  "protocol": "noise-XX-abstract",
+  "events": [
