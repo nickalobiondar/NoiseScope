@@ -193,3 +193,34 @@ mod tests {
                     requires_seq: false,
                     note: None,
                 },
+            ],
+            description: None,
+        }
+    }
+
+    #[test]
+    fn lint_clean_spec() {
+        assert!(tiny_spec().lint().is_empty());
+    }
+
+    #[test]
+    fn lint_detects_bad_initial() {
+        let mut s = tiny_spec();
+        s.initial = "nope".into();
+        assert!(!s.lint().is_empty());
+    }
+
+    #[test]
+    fn matching_transitions() {
+        let s = tiny_spec();
+        assert_eq!(s.matching("s0", "a", "hello").len(), 1);
+        assert_eq!(s.matching("s0", "b", "hello").len(), 0);
+    }
+
+    #[test]
+    fn event_label() {
+        let mut e = Event::new("e0", "initiator", "e");
+        e.nonce = Some(3);
+        assert_eq!(e.label(), "initiator:e#3");
+    }
+}
