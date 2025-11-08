@@ -497,3 +497,71 @@ impl<'a> Parser<'a> {
             Ok(Json::Bool(false))
         } else {
             Err(self.err("invalid literal"))
+        }
+    }
+
+    fn parse_null(&mut self) -> Result<Json, JsonError> {
+        if self.bytes[self.pos..].starts_with(b"null") {
+            self.pos += 4;
+            Ok(Json::Null)
+        } else {
+            Err(self.err("invalid literal"))
+        }
+    }
+}
+
+fn utf8_len(first: u8) -> usize {
+    if first < 0x80 {
+        1
+    } else if first >> 5 == 0b110 {
+        2
+    } else if first >> 4 == 0b1110 {
+        3
+    } else {
+        4
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn roundtrip_object() {
+        let v = parse(r#"{"a":1,"b":[true,null,"x"]}"#).unwrap();
+        assert_eq!(v.get("a").and_then(Json::as_u64), Some(1));
+        assert_eq!(v.to_compact(), r#"{"a":1,"b":[true,null,"x"]}"#);
+    }
+
+    #[test]
+    fn integers_have_no_decimal() {
+        let v = Json::Num(42.0);
+        assert_eq!(v.to_compact(), "42");
+    }
+
+    #[test]
+    fn string_escapes() {
+        let v = parse(r#""line\nbreak\t\u0041""#).unwrap();
+        assert_eq!(v.as_str(), Some("line\nbreak\tA"));
+    }
+
+    #[test]
+    fn comments_allowed() {
+        let v = parse("{\n // a comment\n \"k\": 1\n}").unwrap();
+        assert_eq!(v.get("k").and_then(Json::as_u64), Some(1));
+    }
+
+    #[test]
+    fn rejects_trailing_garbage() {
+        assert!(parse("{} junk").is_err());
+    }
+
+    #[test]
+    fn builder_dedup() {
+        let o = ObjBuilder::new()
+            .set("a", Json::Num(1.0))
+            .set("a", Json::Num(2.0))
+            .build();
+        assert_eq!(o.to_compact(), r#"{"a":2}"#);
+    }
+}
