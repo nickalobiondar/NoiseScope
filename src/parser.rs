@@ -238,4 +238,4 @@ mod tests {
         let t = parse_transcript(src).unwrap();
         assert_eq!(t.events[0].meta.get("len").map(String::as_str), Some("16"));
     }
-// review note: parser must reject partial frames
+}
