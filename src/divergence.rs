@@ -418,4 +418,4 @@ mod tests {
         let txt = report_text(&report);
         assert!(txt.contains("not a cryptographic proof"));
     }
-// review note: verdicts stay byte-stable
+}
