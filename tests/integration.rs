@@ -88,3 +88,28 @@ fn fuzzing_is_deterministic_and_minimal() {
     // Determinism: identical config -> identical JSON report.
     assert_eq!(report_json(&a).to_pretty(), report_json(&b).to_pretty());
 
+    assert!(a.baseline_conforming);
+    assert!(!a.findings.is_empty());
+
+    // Each minimized plan must still cause divergence and be no longer than the
+    // original plan it was reduced from.
+    let roles = sp.roles.clone();
+    for f in &a.findings {
+        let mutated = apply_all(&tr, &f.minimized.plan, &roles);
+        assert!(
+            !replay(&sp, &mutated).is_conforming(),
+            "minimized plan should still fail"
+        );
+        assert!(f.minimized.plan.len() <= f.plan.len());
+    }
+}
+
+#[test]
+fn report_json_carries_disclaimer() {
+    let sp = spec("mls.protocol.json");
+    let tr = transcript("mls.ok.transcript.json");
+    let report = fuzz(&sp, &tr, &FuzzConfig::default());
+    let j = report_json(&report);
+    let disclaimer = j.get("disclaimer").and_then(|v| v.as_str()).unwrap_or("");
+    assert!(disclaimer.contains("not a cryptographic proof"));
+}
