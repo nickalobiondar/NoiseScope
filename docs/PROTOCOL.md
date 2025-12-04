@@ -175,3 +175,26 @@ of predicate evaluations performed.
 
 ---
 
+## 7. Output
+
+- `check` / `fuzz` emit `--format text` (default) or `--format json`.
+- `paths` always emits a viewer-friendly JSON document (see the TypeScript
+  viewer in `viewer/`).
+- Exit codes: `0` conforming/clean, `1` divergence/violations, `2` usage/I/O.
+
+---
+
+## Limitations
+
+- **No cryptography.** Nonces and sequence numbers are ordinary integers used
+  for structural freshness/ordering checks, not cryptographic verification.
+- **Abstract fixtures.** The Noise/TLS/MLS-inspired specs are teaching models.
+  They collapse real flights/tokens into abstract message labels and are **not
+  wire-compatible**; conformance here implies nothing about the real protocols.
+- **First-match transitions.** When multiple transitions match
+  `(state, role, msg)`, the first declared one is taken. Nondeterministic
+  machines are not explored exhaustively.
+- **Bounded fuzzing.** Fuzzing explores a deterministic, seed-driven sample of
+  short mutation plans; absence of findings is not a proof of robustness.
+
+<!-- protocol review by mNguyen91260: mutation-seed notes -->
