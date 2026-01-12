@@ -50,3 +50,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Noise framework (Noise_XX) model with pattern parsing
 - first mutation operators: truncate, duplicate, reorder
+
+## [0.1.0] - 2016-12-08
+
+### Added
+- initial public release
+- transcript parser and state-machine linting for Noise-XX
+
+# draft note 1
