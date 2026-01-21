@@ -10,3 +10,13 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "node --test dist/render.test.js",
+    "check": "tsc -p tsconfig.json --noEmit"
+  },
+  "files": ["dist", "src"],
+  "devDependencies": {
+    "typescript": "5.5.4",
+    "@types/node": "20.14.10"
+  }
+}
+
+# draft note 4
