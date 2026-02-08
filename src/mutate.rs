@@ -243,3 +243,40 @@ mod tests {
     fn duplicate_inserts_copy() {
         let out = apply_one(&t3(), &Mutation::Duplicate { index: 0 }, &[]);
         assert_eq!(out.events.len(), 4);
+        assert_eq!(out.events[1].id, "e0~dup");
+    }
+
+    #[test]
+    fn reorder_swaps() {
+        let out = apply_one(&t3(), &Mutation::Reorder { a: 0, b: 2 }, &[]);
+        assert_eq!(out.events[0].id, "e2");
+        assert_eq!(out.events[2].id, "e0");
+    }
+
+    #[test]
+    fn corrupt_role_uses_other_role() {
+        let roles = vec!["i".to_string(), "r".to_string()];
+        let out = apply_one(
+            &t3(),
+            &Mutation::CorruptMeta {
+                index: 0,
+                field: MetaField::Role,
+            },
+            &roles,
+        );
+        assert_eq!(out.events[0].role, "r");
+    }
+
+    #[test]
+    fn out_of_range_is_noop() {
+        let out = apply_one(&t3(), &Mutation::Drop { index: 99 }, &[]);
+        assert_eq!(out.events.len(), 3);
+    }
+
+    #[test]
+    fn plan_is_reproducible() {
+        let p1 = generate_plan(&mut SplitMix64::new(7), 3, 10);
+        let p2 = generate_plan(&mut SplitMix64::new(7), 3, 10);
+        assert_eq!(p1, p2);
+    }
+}
