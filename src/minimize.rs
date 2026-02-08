@@ -104,3 +104,26 @@ mod tests {
             Mutation::Reorder { a: 1, b: 3 },
         ];
         let m = minimize(&base(), &[], &plan, &fails);
+        assert_eq!(m.plan.len(), 1);
+        assert!(matches!(m.plan[0], Mutation::Drop { .. }));
+        assert_eq!(m.original_len, 3);
+    }
+
+    #[test]
+    fn non_failing_plan_unchanged() {
+        let fails = |t: &Transcript| t.events.len() < 5;
+        let plan = vec![Mutation::Reorder { a: 0, b: 1 }];
+        let m = minimize(&base(), &[], &plan, &fails);
+        assert_eq!(m.plan.len(), 1);
+        assert_eq!(m.evaluations, 1);
+    }
+
+    #[test]
+    fn keeps_all_when_all_needed() {
+        // Fails only if at least two events dropped (len < 4).
+        let fails = |t: &Transcript| t.events.len() < 4;
+        let plan = vec![Mutation::Drop { index: 0 }, Mutation::Drop { index: 0 }];
+        let m = minimize(&base(), &[], &plan, &fails);
+        assert_eq!(m.plan.len(), 2);
+    }
+}
