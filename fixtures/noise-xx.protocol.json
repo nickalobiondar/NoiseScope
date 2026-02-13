@@ -6,3 +6,23 @@
   "initial": "await_e",
   "states": ["await_e", "await_ee", "await_se", "established"],
   "accepting": ["established"],
+  "transitions": [
+    {
+      "from": "await_e", "to": "await_ee", "role": "initiator", "msg": "e",
+      "requires_fresh_nonce": true,
+      "note": "Message 1: initiator ephemeral. Requires a fresh nonce."
+    },
+    {
+      "from": "await_ee", "to": "await_se", "role": "responder", "msg": "e_ee_s_es",
+      "requires_fresh_nonce": true, "requires_seq": true,
+      "note": "Message 2: responder ephemeral + mixed tokens (abstract), sequenced."
+    },
+    {
+      "from": "await_se", "to": "established", "role": "initiator", "msg": "s_se",
+      "requires_seq": true,
+      "note": "Message 3: initiator static + se (abstract), sequenced."
+    }
+  ]
+}
+
+# draft note 12
