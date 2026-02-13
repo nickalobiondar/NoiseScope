@@ -6,3 +6,17 @@
   "initial": "epoch_open",
   "states": ["epoch_open", "proposed", "committed", "welcomed"],
   "accepting": ["welcomed"],
+  "transitions": [
+    {"from": "epoch_open", "to": "proposed", "role": "proposer", "msg": "Proposal",
+     "requires_seq": true,
+     "note": "A member proposes an add/update/remove (abstracted)."},
+    {"from": "proposed", "to": "committed", "role": "committer", "msg": "Commit",
+     "requires_fresh_nonce": true, "requires_seq": true,
+     "note": "Commit advances the epoch; fresh nonce stands in for a new epoch secret."},
+    {"from": "committed", "to": "welcomed", "role": "joiner", "msg": "WelcomeAck",
+     "requires_seq": true,
+     "note": "New member acknowledges the Welcome and enters the group."}
+  ]
+}
+
+# draft note 10
