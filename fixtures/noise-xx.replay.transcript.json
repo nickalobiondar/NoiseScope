@@ -1,1 +1,13 @@
 {
+  "kind": "transcript",
+  "protocol": "noise-XX-abstract",
+  "events": [
+    {"id": "m1", "role": "initiator", "msg": "e", "nonce": 1001,
+     "meta": {"note": "reuses nonce below"}},
+    {"id": "m2", "role": "responder", "msg": "e_ee_s_es", "nonce": 1001, "seq": 0,
+     "meta": {"note": "nonce 1001 was already used by m1 -> replay divergence"}},
+    {"id": "m3", "role": "initiator", "msg": "s_se", "seq": 0}
+  ]
+}
+
+# draft note 13
