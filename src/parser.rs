@@ -239,3 +239,5 @@ mod tests {
         assert_eq!(t.events[0].meta.get("len").map(String::as_str), Some("16"));
     }
 }
+
+// draft note 4
