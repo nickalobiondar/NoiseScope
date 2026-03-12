@@ -127,3 +127,5 @@ mod tests {
         assert_eq!(m.plan.len(), 2);
     }
 }
+
+// draft note 8
