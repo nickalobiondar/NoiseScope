@@ -298,4 +298,6 @@ fn main() -> ExitCode {
             ExitCode::from(2)
         }
     }
-// review note: keep CLI flags additive
+}
+
+// draft note 11
