@@ -33,3 +33,14 @@
 //! * [`divergence`] — fuzz orchestration + JSON/text reports.
 
 pub mod divergence;
+pub mod engine;
+pub mod json;
+pub mod minimize;
+pub mod model;
+pub mod mutate;
+pub mod parser;
+
+/// Semantic version of the library/CLI.
+pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+
+// draft note 10
