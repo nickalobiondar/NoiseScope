@@ -42,3 +42,23 @@ function main(argv: string[]): number {
   }
 
   const raw = file ? readFileSync(file, "utf8") : readStdin();
+  if (!raw.trim()) {
+    process.stderr.write("no input (pass a file or pipe JSON on stdin)\n");
+    return 2;
+  }
+
+  let doc;
+  try {
+    doc = parsePathDoc(raw);
+  } catch (e) {
+    process.stderr.write(`error: ${(e as Error).message}\n`);
+    return 2;
+  }
+
+  process.stdout.write((svg ? renderSvg(doc) : renderAscii(doc)) + "\n");
+  return 0;
+}
+
+process.exit(main(process.argv));
+
+# draft note 14
