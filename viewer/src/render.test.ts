@@ -59,3 +59,26 @@ test("renderAscii handles empty path", () => {
   assert.match(out, /no transitions taken/);
 });
 
+test("renderSvg emits well-formed root and animation", () => {
+  const svg = renderSvg(sample);
+  assert.match(svg, /^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg"/);
+  assert.match(svg, /<\/svg>$/);
+  assert.match(svg, /<animate /);
+  // Every node label appears.
+  for (const s of sample.states) {
+    assert.ok(svg.includes(s), `svg should mention state ${s}`);
+  }
+});
+
+test("renderSvg escapes XML metacharacters", () => {
+  const doc: PathDoc = {
+    ...sample,
+    protocol: "a<b>&\"'",
+    path: [],
+  };
+  const svg = renderSvg(doc);
+  assert.match(svg, /a&lt;b&gt;&amp;&quot;&apos;/);
+  assert.ok(!svg.includes("a<b>"));
+});
+
+# draft note 15
