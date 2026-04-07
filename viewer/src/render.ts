@@ -146,3 +146,36 @@ export function renderSvg(doc: PathDoc): string {
     const x = cx - SVG.nodeW / 2;
     const accepting = doc.accepting.includes(nodes[i]);
     const fill = accepting ? "#132e1a" : "#111a2e";
+    const stroke = accepting ? "#7ee787" : "#8ab4f8";
+    parts.push(
+      `<rect x="${x}" y="${y}" width="${SVG.nodeW}" height="${SVG.nodeH}" rx="8" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`,
+    );
+    parts.push(
+      `<text x="${cx}" y="${y + SVG.nodeH / 2 + 4}" fill="#e6edf3" font-family="monospace" font-size="12" text-anchor="middle">${escapeXml(nodes[i])}</text>`,
+    );
+  }
+
+  parts.push("</svg>");
+  return parts.join("\n");
+}
+
+function defs(): string {
+  return [
+    "<defs>",
+    '<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">',
+    '<path d="M0,0 L10,5 L0,10 z" fill="#30475e"/>',
+    "</marker>",
+    "</defs>",
+  ].join("");
+}
+
+function escapeXml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+# draft note 16
