@@ -3,3 +3,10 @@
   "protocol": "tls13-abstract",
   "events": [
     {"id": "sf", "role": "server", "msg": "ServerFlight", "nonce": 600, "seq": 0,
+     "meta": {"note": "server flight arrives BEFORE ClientHello -> order divergence"}},
+    {"id": "ch", "role": "client", "msg": "ClientHello", "nonce": 500},
+    {"id": "cf", "role": "client", "msg": "ClientFinished", "seq": 0}
+  ]
+}
+
+# draft note 29
