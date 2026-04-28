@@ -12,3 +12,13 @@ labels: bug
 
 ```
 cargo run -- lint fixtures/noise-xx.protocol.json
+cargo run -- check fixtures/noise-xx.protocol.json <transcript>
+```
+
+**Environment**
+
+- noisescope version (`cargo run -- --version`):
+- Rust version:
+- OS:
+
+# draft note 32
