@@ -14,3 +14,12 @@ the constellation.
 - Every new mutation operator ships with a fixture pair (`.ok` transcript and a
   diverging one).
 
+## Workflow
+
+1. Fork, create a topic branch.
+2. `cargo fmt --check && cargo clippy --all-targets -- -D warnings`.
+3. `cargo test` and the fixture smoke tests from CI must pass.
+4. For viewer changes: `npm run check && npm test` in `viewer/`.
+5. Conventional commits (`feat:`, `fix:`, `docs:`, `test:`, `chore:`).
+
+# draft note 31
