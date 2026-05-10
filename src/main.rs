@@ -299,5 +299,3 @@ fn main() -> ExitCode {
         }
     }
 }
-
-// draft note 11
