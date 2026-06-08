@@ -16,3 +16,5 @@ analysis instrument, not a TLS implementation. If you find a vulnerability
 (panics on crafted input, path traversal in file loading, unsafe deserialization),
 open a private security advisory rather than a public issue. Expect a first
 response within 7 days.
+
+# draft note 36
