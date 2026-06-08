@@ -59,3 +59,21 @@ fmt-check: ## Check formatting (skipped if rustfmt missing)
 clippy: ## Run clippy (skipped if clippy missing)
 	@command -v cargo-clippy >/dev/null 2>&1 && $(CARGO) clippy --all-targets -- -D warnings || echo "note: clippy not found, skipping"
 
+.PHONY: check
+check: fmt-check clippy test ## fmt-check + clippy + all tests
+
+.PHONY: demo
+demo: build-rust ## Run the README demos against the fixtures
+	@echo "== lint =="
+	-$(CARGO) run --quiet -- lint $(NOISE_SPEC)
+	@echo "== check (conforming) =="
+	-$(CARGO) run --quiet -- check $(NOISE_SPEC) $(NOISE_OK)
+	@echo "== check (diverging: reorder) =="
+	-$(CARGO) run --quiet -- check $(TLS_SPEC) $(TLS_REORD)
+	@echo "== fuzz + minimize =="
+	-$(CARGO) run --quiet -- fuzz $(NOISE_SPEC) $(NOISE_OK) --seed 0x5EED --trials 200 --max-findings 1
+
+.PHONY: clean
+clean: ## Remove build artifacts
+	$(CARGO) clean
+	@rm -rf $(VIEWER_DIR)/dist $(VIEWER_DIR)/node_modules
