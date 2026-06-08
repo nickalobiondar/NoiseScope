@@ -77,3 +77,5 @@ demo: build-rust ## Run the README demos against the fixtures
 clean: ## Remove build artifacts
 	$(CARGO) clean
 	@rm -rf $(VIEWER_DIR)/dist $(VIEWER_DIR)/node_modules
+
+# draft note 39
