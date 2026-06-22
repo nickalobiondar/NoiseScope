@@ -114,4 +114,4 @@ fn report_json_carries_disclaimer() {
     assert!(disclaimer.contains("not a cryptographic proof"));
 }
 
-// draft note 18
+// draft note 57
