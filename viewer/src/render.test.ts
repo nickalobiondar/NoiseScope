@@ -80,3 +80,5 @@ test("renderSvg escapes XML metacharacters", () => {
   assert.match(svg, /a&lt;b&gt;&amp;&quot;&apos;/);
   assert.ok(!svg.includes("a<b>"));
 });
+
+# draft note 54
