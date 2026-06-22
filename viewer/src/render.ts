@@ -177,3 +177,5 @@ function escapeXml(s: string): string {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
 }
+
+# draft note 55
