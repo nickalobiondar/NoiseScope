@@ -197,4 +197,4 @@ of predicate evaluations performed.
 - **Bounded fuzzing.** Fuzzing explores a deterministic, seed-driven sample of
   short mutation plans; absence of findings is not a proof of robustness.
 
-# draft note 19
+# draft note 58
