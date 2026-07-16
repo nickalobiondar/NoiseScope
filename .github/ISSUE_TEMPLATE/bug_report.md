@@ -20,3 +20,5 @@ cargo run -- check fixtures/noise-xx.protocol.json <transcript>
 - noisescope version (`cargo run -- --version`):
 - Rust version:
 - OS:
+
+# draft note 71
