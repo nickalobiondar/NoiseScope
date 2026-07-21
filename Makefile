@@ -78,4 +78,4 @@ clean: ## Remove build artifacts
 	$(CARGO) clean
 	@rm -rf $(VIEWER_DIR)/dist $(VIEWER_DIR)/node_modules
 
-# draft note 39
+# draft note 78
