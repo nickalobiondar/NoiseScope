@@ -27,4 +27,4 @@ panic = "abort"
 # No third-party crates are used, by design (auditability + reproducibility).
 [dependencies]
 
-# draft note 38
+# draft note 77
