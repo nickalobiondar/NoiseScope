@@ -17,4 +17,4 @@ analysis instrument, not a TLS implementation. If you find a vulnerability
 open a private security advisory rather than a public issue. Expect a first
 response within 7 days.
 
-# draft note 36
+# draft note 75
