@@ -56,3 +56,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - initial public release
 - transcript parser and state-machine linting for Noise-XX
+
+# draft note 79
