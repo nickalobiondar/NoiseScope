@@ -565,5 +565,3 @@ mod tests {
         assert_eq!(o.to_compact(), r#"{"a":2}"#);
     }
 }
-
-// draft note 83

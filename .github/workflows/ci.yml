@@ -56,5 +56,3 @@ jobs:
       - name: Test
         working-directory: viewer
         run: npm test
-
-# draft note 76

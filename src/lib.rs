@@ -42,5 +42,3 @@ pub mod parser;
 
 /// Semantic version of the library/CLI.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
-
-// draft note 49

@@ -224,5 +224,3 @@ mod tests {
         assert_eq!(e.label(), "initiator:e#3");
     }
 }
-
-// draft note 81

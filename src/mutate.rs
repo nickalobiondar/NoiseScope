@@ -280,5 +280,3 @@ mod tests {
         assert_eq!(p1, p2);
     }
 }
-
-// draft note 85

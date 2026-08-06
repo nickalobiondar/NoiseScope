@@ -113,5 +113,3 @@ fn report_json_carries_disclaimer() {
     let disclaimer = j.get("disclaimer").and_then(|v| v.as_str()).unwrap_or("");
     assert!(disclaimer.contains("not a cryptographic proof"));
 }
-
-// draft note 57

@@ -405,5 +405,3 @@ mod tests {
             .any(|v| v.kind == ViolationKind::NotAccepting));
     }
 }
-
-// draft note 84

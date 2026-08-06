@@ -21,5 +21,3 @@ the constellation.
 3. `cargo test` and the fixture smoke tests from CI must pass.
 4. For viewer changes: `npm run check && npm test` in `viewer/`.
 5. Conventional commits (`feat:`, `fix:`, `docs:`, `test:`, `chore:`).
-
-# draft note 70
