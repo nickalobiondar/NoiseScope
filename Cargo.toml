@@ -26,5 +26,3 @@ panic = "abort"
 # noisescope intentionally depends on the Rust standard library only.
 # No third-party crates are used, by design (auditability + reproducibility).
 [dependencies]
-
-# draft note 77
