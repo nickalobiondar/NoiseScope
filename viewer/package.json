@@ -14,7 +14,7 @@
   },
   "files": ["dist", "src"],
   "devDependencies": {
-    "typescript": "5.5.4",
+    "typescript": "7.0.2",
     "@types/node": "20.14.10"
   }
 }
