@@ -169,17 +169,22 @@ fn run() -> Result<i32, String> {
         return Ok(2);
     }
     let command = raw[0].clone();
-    let opts = parse_options(&raw[1..])?;
-
+    // `help` and `version` are informational: they run even when flags follow,
+    // so `noisescope help --anything` still prints the help text.
     match command.as_str() {
         "help" | "-h" | "--help" => {
             print!("{HELP}");
-            Ok(0)
+            return Ok(0);
         }
         "version" | "-V" | "--version" => {
             println!("noisescope {}", noisescope::VERSION);
-            Ok(0)
+            return Ok(0);
         }
+        _ => {}
+    }
+    let opts = parse_options(&raw[1..])?;
+
+    match command.as_str() {
         "lint" => {
             let path = opts.positional.first().ok_or("lint requires <spec.json>")?;
             let spec = parse_protocol(&read_file(path)?).map_err(|e| e.to_string())?;

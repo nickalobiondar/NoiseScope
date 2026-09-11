@@ -34,14 +34,29 @@ function main(argv: string[]): number {
           "(structural visualization only; not a cryptographic proof tool)\n",
       );
       return 0;
-    } else if (!a.startsWith("--")) file = a;
-    else {
+    } else if (!a.startsWith("--")) {
+      if (file !== undefined) {
+        process.stderr.write(`error: unexpected extra argument: ${a}\n`);
+        return 2;
+      }
+      file = a;
+    } else {
       process.stderr.write(`unknown flag: ${a}\n`);
       return 2;
     }
   }
 
-  const raw = file ? readFileSync(file, "utf8") : readStdin();
+  let raw: string;
+  if (file) {
+    try {
+      raw = readFileSync(file, "utf8");
+    } catch (e) {
+      process.stderr.write(`error: cannot read ${file}: ${(e as Error).message}\n`);
+      return 2;
+    }
+  } else {
+    raw = readStdin();
+  }
   if (!raw.trim()) {
     process.stderr.write("no input (pass a file or pipe JSON on stdin)\n");
     return 2;

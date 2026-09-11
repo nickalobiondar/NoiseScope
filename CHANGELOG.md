@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - planning: SSH handshake model alongside the Noise/MLS/TLS13 models
+- fixed: CI toolchain step now passes `--component` once per component
+- fixed: viewer CLI reports unreadable files and extra arguments cleanly (exit 2)
+- fixed: `help` and `version` no longer reject trailing flags
 
 ## [1.0.0] - 2026-07-08
 
